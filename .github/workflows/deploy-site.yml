@@ -26,9 +26,14 @@ jobs:
 
       # No access key and no GitHub secret. The job presents the token GitHub
       # signed for this run, and STS returns credentials good for about an hour.
+      #
+      # AWS_ROLE_ARN is a repository variable, not a secret: an ARN is an
+      # identifier and grants nothing on its own. It lives outside the repo so
+      # pointing the deploy at another account is a settings change rather than
+      # a commit. Set it under Settings > Secrets and variables > Actions.
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::646278323015:role/christiansantiago-dev-deploy
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: us-east-2
 
       # --delete is what stops files removed from client/ living in the bucket

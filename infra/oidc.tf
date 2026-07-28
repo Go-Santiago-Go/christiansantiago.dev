@@ -42,7 +42,14 @@ resource "aws_iam_role" "deploy" {
           # Pinned to a branch, not just a repo. Matching on the repo alone
           # would let anything able to push a branch deploy to production, and
           # a wildcard across the account would trust repos not yet forked.
-          "token.actions.githubusercontent.com:sub" = "repo:Go-Santiago-Go/christiansantiago.dev:ref:refs/heads/main"
+          #
+          # The @ suffixed numbers are the owner ID and the repository ID. This
+          # account issues immutable subject claims, so the plain
+          # repo:owner/name form never matches and STS denies with a message
+          # that says nothing about why. The IDs survive a rename, which is the
+          # point: a policy naming only the strings would silently start
+          # trusting whoever claims the old name.
+          "token.actions.githubusercontent.com:sub" = "repo:Go-Santiago-Go@85260356/christiansantiago.dev@1315366323:ref:refs/heads/main"
         }
       }
     }]
