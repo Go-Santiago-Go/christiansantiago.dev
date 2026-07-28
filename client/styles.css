@@ -1,0 +1,725 @@
+/* christiansantiago.dev
+ *
+ * Two class layers, kept deliberately separate:
+ *
+ *   1. Composition  - Every Layout primitives (every-layout.dev). .stack,
+ *      .cluster, .center, .grid, .rule. They own arrangement and nothing else,
+ *      and are tuned per instance through custom properties rather than by
+ *      writing variants. No block sets its own layout, so any block drops into
+ *      any context unchanged.
+ *
+ *   2. Blocks       - BEM. block, block__element, block--modifier. They own
+ *      appearance and nothing else: colour, type, borders, spacing inside a
+ *      component. Single class per rule, so specificity stays flat at 0-1-0
+ *      and later rules win by order rather than by nesting.
+ *
+ * Visual language mirrors the reference site: a dark surface, hairline rules
+ * instead of cards, pill controls, and a single accent used sparingly.
+ *
+ * No build step by design, so this is plain CSS: custom properties for tokens,
+ * logical properties for spacing, intrinsic sizing for layout. Exactly one
+ * width breakpoint exists, for the nav collapse, which is the only thing on the
+ * page intrinsic sizing genuinely cannot express. The other media queries are
+ * user-preference and output-medium queries, not layout.
+ */
+
+/* ---------------------------------------------------------------- tokens -- */
+
+:root {
+  /* Dark only. The reference commits to one theme, and a portfolio that looks
+     identical to every visitor is one less thing to verify before a deploy. */
+  color-scheme: dark;
+
+  /* Modular spacing scale, ratio 1.5. Every spacing value in this file comes
+     from this scale, so vertical rhythm stays consistent without guesswork. */
+  --s-2: 0.44rem;
+  --s-1: 0.67rem;
+  --s0:  1rem;
+  --s1:  1.5rem;
+  --s2:  2.25rem;
+  --s3:  3.375rem;
+  --s4:  5.06rem;
+
+  /* Page container width, consumed by .center. */
+  --measure: 76rem;
+  /* Prose cap. Text beyond ~65ch is measurably harder to read because the eye
+     loses the line on the return sweep. Applied to text, never to containers. */
+  --prose: 68ch;
+
+  --border-thin: 1px;
+  --radius: 8px;
+  --radius-pill: 999px;
+
+  /* The header is fixed, so it is out of flow and contributes no height.
+     Anchor scrolling has to offset by this or section headings land underneath
+     it, so the value lives in one place rather than being approximated at each
+     use. The hero's top padding derives from it too. */
+  --header-h: 4.75rem;
+
+  /* Minimum comfortable touch target (WCAG 2.5.8, Apple HIG). */
+  --tap: 44px;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Avenir Next", "Segoe UI", ui-sans-serif, system-ui,
+                  -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
+
+  /* Surface: a near-black navy rather than pure black. Pure black under bright
+     text produces halation, and the slight blue keeps the cyan accent from
+     looking like it is floating on nothing. */
+  --bg: #050814;
+  --bg-soft: #0a1226;
+  --bg-deep: #040812;
+
+  /* Elevated surfaces are translucent white, not a fixed grey, so anything
+     layered over the background gradient still reads as sitting above it. */
+  --surface: rgb(255 255 255 / 0.04);
+  --surface-hover: rgb(255 255 255 / 0.07);
+  --border: rgb(255 255 255 / 0.10);
+  --border-strong: rgb(255 255 255 / 0.25);
+
+  /* Four text tiers, not two. Headings are full contrast, body copy sits a
+     step down, and metadata (dates, locations) below that. The tiers are what
+     make an entry scannable before it is read. */
+  --text: #eff4ff;
+  --text-body: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-meta: #7c8899;
+
+  /* Go's brand cyan. On this background it clears WCAG AA comfortably, which
+     the same colour does not do on white. */
+  --accent: #00add8;
+  --accent-soft: #7fd6ec;
+  --accent-contrast: #04202b;
+  /* Channel triplet of --accent, for the rgb() slash syntax where an alpha has
+     to be applied to the accent inside a gradient stop. */
+  --accent-rgb: 0 173 216;
+
+  /* Hero spotlight. Sized in rem so the blob scales with the root font size,
+     and halved by the CSS itself rather than by JavaScript, which is what lets
+     main.js pass raw pointer coordinates through untouched. */
+  --spot-size: 34rem;
+  --spot-blur: 64px;
+  /* How far the light trails the cursor. The lag is the effect: at 0s the blob
+     is welded to the pointer and reads as a cheap cursor decoration. */
+  --spot-ease: cubic-bezier(0.21, 1, 0.32, 1);
+  --spot-duration: 0.35s;
+}
+
+/* ------------------------------------------------------------ base reset -- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body, h1, h2, h3, p, ul, figure { margin: 0; }
+
+ul { padding: 0; list-style: none; }
+
+html {
+  /* Anchor nav would otherwise drop section headings under the fixed header. */
+  scroll-padding-block-start: calc(var(--header-h) + var(--s1));
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  min-block-size: 100vh;
+  /* Two soft accent washes at the top over a vertical fade that darkens toward
+     the footer. Painted on the body rather than .hero so the washes span the
+     full viewport width instead of being clipped to the centred column, and so
+     the page bottom resolves instead of ending on a flat field.
+
+     Viewport-attached on purpose: the washes hold their position on screen as
+     you scroll rather than sliding away with the document. */
+  background:
+    radial-gradient(circle at 15% 0%, rgb(0 173 216 / 0.16), transparent 32%),
+    radial-gradient(circle at 85% 12%, rgb(0 120 180 / 0.14), transparent 30%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 45%, var(--bg-deep) 100%);
+  background-attachment: fixed;
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  /* Safety net so a long email address or URL breaks instead of forcing the
+     page to scroll sideways on a narrow screen. */
+  overflow-wrap: break-word;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(3rem, 2.2rem + 3.4vw, 4.5rem); letter-spacing: -0.04em; }
+h2 { font-size: clamp(1.875rem, 1.6rem + 1.2vw, 2.25rem); letter-spacing: -0.02em; }
+h3 { font-size: 1.5rem; letter-spacing: -0.01em; }
+h4 { font-size: 1.25rem; }
+
+p { text-wrap: pretty; }
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { color: var(--accent-soft); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ============================================================ COMPOSITION == */
+/* Every Layout primitives. Arrangement only: no colour, no type, no borders.
+   Each is tuned at the point of use by setting its custom property. */
+
+/* Stack: owns the space *between* its children and nothing else. The owl
+   selector applies margin only where two siblings meet, so a stack never adds
+   a stray margin at its own outer edges. */
+.stack { display: flex; flex-direction: column; justify-content: flex-start; }
+.stack > * + * { margin-block-start: var(--space, var(--s1)); }
+
+/* Center: horizontal centering plus gutters, capped at --measure. content-box
+   keeps the gutters outside the cap, so the measure means what it says. */
+.center {
+  box-sizing: content-box;
+  max-inline-size: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--s1);
+}
+
+/* Cluster: items sit inline and wrap gracefully when they run out of room,
+   e.g. nav links or button rows. No breakpoint needed; it wraps when it must. */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space, var(--s0));
+  align-items: var(--align, center);
+}
+
+/* Grid: as many columns as fit at the given minimum, then it reflows itself.
+   The media-query-free way to lay out cards. min() stops the minimum track
+   from overflowing a viewport narrower than --min. */
+.grid {
+  display: grid;
+  gap: var(--space, var(--s1));
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--min, 20rem), 100%), 1fr));
+}
+
+/* Two columns at most. Column count is never set directly; it falls out of the
+   minimum track size. The container is 76rem, so a 28rem minimum fits two
+   tracks plus the gap but never three. Raising --min is how you lower the
+   column count without adding a breakpoint. */
+.grid--halves { --min: 28rem; }
+
+/* Sidebar-ish split: the second track is the narrower one, and both collapse
+   to full width when the container cannot hold them side by side. */
+.grid--lead { --min: 26rem; grid-template-columns: repeat(auto-fit, minmax(min(var(--min), 100%), 1fr)); }
+
+/* Rule: the reference's core structural device. A hairline *above* the content
+   rather than a border *around* it, so a section reads as a continuous
+   document instead of a wall of cards. Composition, not decoration: it sets
+   the relationship between a block and the one before it. */
+.rule {
+  border-block-start: var(--border-thin) solid var(--border);
+  padding-block-start: var(--s1);
+}
+
+/* Prose: caps text width without capping its container. Applied to the text
+   itself so a container can stay wide for a card grid while paragraphs inside
+   it stay readable. */
+.prose { max-inline-size: var(--prose); }
+
+/* Reveal: sections fade up as they enter the viewport. The hidden state is
+   scoped to .js-reveal, which main.js sets on <html> only once it has
+   confirmed it can undo it. A scripting failure therefore leaves every section
+   plainly visible rather than blank. */
+.js-reveal .reveal { opacity: 0; transform: translateY(28px); }
+.js-reveal .reveal--visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal, .js-reveal .reveal--visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ================================================================= BLOCKS == */
+
+/* ------------------------------------------------------------- skip-link -- */
+
+.skip-link {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  overflow: hidden; clip-path: inset(50%);
+}
+.skip-link:focus-visible {
+  position: fixed;
+  inset-block-start: var(--s0);
+  inset-inline-start: var(--s0);
+  inline-size: auto; block-size: auto;
+  clip-path: none;
+  padding: var(--s-1) var(--s0);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: var(--radius);
+  z-index: 60;
+}
+
+/* ----------------------------------------------------------- site-header -- */
+
+/* Fixed rather than sticky, so the pill floats clear of the page edge with
+   background visible above and around it. Out of flow, which is why .hero
+   carries the compensating top padding. */
+.site-header {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-start: 0;
+  z-index: 50;
+  padding-block-start: var(--s0);
+}
+
+.site-header__bar {
+  /* Composed as a .cluster, so this only supplies the gap and the alignment
+     the primitive leaves open. */
+  --space: var(--s0);
+  justify-content: space-between;
+  padding: var(--s-1) var(--s1);
+  border: var(--border-thin) solid transparent;
+  border-radius: var(--radius-pill);
+  /* Transitioned so the scrolled state fades in instead of snapping. */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* main.js adds this once the page has scrolled off the top. At the very top
+   the bar is invisible and the hero reads full-bleed; over content it needs a
+   surface or the links collide with whatever is behind them. */
+.site-header--scrolled .site-header__bar {
+  background: rgb(5 8 20 / 0.72);
+  border-color: var(--border);
+  backdrop-filter: blur(14px);
+}
+
+/* -------------------------------------------------------------------- nav -- */
+
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  /* Tracked out far enough to read as a wordmark. Held below the reference's
+     0.28em because this name is longer, and the brand plus six links plus the
+     CTA have to clear the nav's collapse point on one line. */
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav__list { --space: var(--s-2); font-size: 0.875rem; }
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--s0);
+  min-block-size: var(--tap);
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.nav__link:hover { background: rgb(255 255 255 / 0.05); color: var(--text); }
+
+/* main.js marks whichever section currently occupies the viewport. A position
+   indicator only; the link's destination is unchanged, so it carries no ARIA. */
+.nav__link--active { background: rgb(255 255 255 / 0.10); color: var(--text); }
+
+/* The nav collapses to brand + resume CTA on narrow screens. The section links
+   are all reachable by scrolling, so hiding them costs nothing and avoids
+   shipping a hamburger menu and the JavaScript behind it. 64rem is where six
+   links plus the brand and the CTA stop fitting on one line. */
+.nav__list { display: none; }
+@media (min-width: 64rem) {
+  .nav__list { display: flex; }
+}
+
+/* -------------------------------------------------------------------- btn -- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--tap);
+  padding: var(--s-1) var(--s1);
+  border: var(--border-thin) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+.btn:hover {
+  /* The lift is the reference's signature hover. Small enough to read as
+     responsiveness rather than as movement. */
+  transform: translateY(-2px);
+  background: var(--surface-hover);
+  border-color: rgb(255 255 255 / 0.35);
+  color: var(--text);
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  /* A wide, low-opacity glow rather than a drop shadow. It reads as the button
+     emitting light onto the dark surface, which a hard shadow cannot do here
+     because there is nothing bright for it to fall against. */
+  box-shadow: 0 24px 100px rgb(0 173 216 / 0.28);
+}
+.btn--primary:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+  color: var(--accent-contrast);
+}
+
+.btn--small { font-size: 0.8125rem; padding-inline: var(--s0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .btn:hover { transform: none; transition: none; }
+}
+
+/* ---------------------------------------------------------------- section -- */
+
+.section { padding-block: var(--s3); }
+
+/* Separates the heading block from the section's content. Larger than the
+   default stack gap, because that distance is what tells the eye a heading has
+   ended and its body has begun. */
+.section__inner { --space: var(--s2); }
+
+/* Capped tighter than the section container so the kicker, heading, and lede
+   read as one column of text rather than a full-width banner. The tight gap is
+   what fuses the three lines into a single unit. */
+.section__head { --space: var(--s-1); max-inline-size: 42rem; }
+
+/* Small uppercase label above each section heading, so a section announces
+   itself before the eye reaches the heading. The wide tracking is what makes a
+   short label read as a label instead of an orphaned sentence. */
+.section__kicker {
+  font-size: 0.875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent-soft) 80%, transparent);
+}
+
+.section__lede { font-size: 1.125rem; color: var(--text-body); }
+
+/* ------------------------------------------------------------------- hero -- */
+
+/* Clears the fixed header, which is out of flow and so reserves no space of
+   its own. Deriving from --header-h keeps the two in sync.
+
+   position:relative makes this the containing block for the glow layer, and
+   overflow:hidden is what stops a spotlight parked near the edge from bleeding
+   its 64px blur across the rest of the page. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: calc(var(--header-h) + var(--s3)) var(--s2);
+}
+
+/* z-index rather than a stacking hack: the glow is painted first and the
+   content is lifted above it, so the light passes behind the type. */
+.hero__body { position: relative; z-index: 1; max-inline-size: 56rem; }
+
+/* -------------------------------------------------------- hero spotlight -- */
+
+.hero__glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Without this the layer intercepts every click and hover meant for the
+     hero's buttons, because it covers all of them. */
+  pointer-events: none;
+}
+
+/* The surface the light falls on. A spotlight over flat colour reads as a
+   smudge; over a faint grid it reads as illumination, because the grid gives
+   the falloff something to be measured against. */
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 0),
+    linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 0);
+  background-size: 72px 72px;
+  opacity: 0.035;
+}
+
+/* Anchored at the hero's top-left, then pulled back by half its own size so
+   the translate in --spot-x/--spot-y lands its *centre* on the cursor rather
+   than its corner. Doing the offset here keeps main.js free of magic numbers. */
+.hero__spotlight {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: var(--spot-size);
+  block-size: var(--spot-size);
+  margin-block-start: calc(var(--spot-size) / -2);
+  margin-inline-start: calc(var(--spot-size) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(var(--accent-rgb) / 0.34),
+    rgb(var(--accent-rgb) / 0.08) 42%,
+    transparent 72%
+  );
+  filter: blur(var(--spot-blur));
+  /* Custom properties are not themselves animatable, but the transform that
+     consumes them is: changing --spot-x recomputes transform, and the
+     transition interpolates that. This is what produces the trailing glide. */
+  transform: translate3d(var(--spot-x, 50vw), var(--spot-y, 22rem), 0);
+  transition: transform var(--spot-duration) var(--spot-ease);
+  /* Promotes the blurred layer so the transform is composited rather than
+     re-rasterising a 64px blur on every frame. */
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* main.js never attaches the pointer listener in this case, so the blob
+     stays at its resting offset. Killing the transition too means the one
+     reposition it does get, on resize, does not slide across the screen. */
+  .hero__spotlight { transition: none; }
+}
+
+/* Sits in the slot the reference uses for "role at employer". Reads as a
+   credential rather than a decoration, so it earns the visual weight. Holds
+   one credential on purpose: a row of them was tried and crowded the hero. */
+.hero__badge {
+  align-self: start;
+  padding: var(--s-2) var(--s0);
+  border: var(--border-thin) solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+/* Regular weight and a step down in size from the h1, so it continues the
+   heading rather than competing with it. */
+.hero__title {
+  font-size: clamp(1.125rem, 1rem + 0.7vw, 1.375rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-body);
+  max-inline-size: 44ch;
+}
+
+.hero__blurb { color: var(--text-muted); }
+
+.hero__actions { --space: var(--s-1); margin-block-start: var(--s1); }
+
+/* --------------------------------------------------------------- subject -- */
+
+/* A titled block of prose. Used for the About columns and the Resume panel:
+   anywhere a heading introduces a short run of paragraphs. */
+.subject__title { font-size: 1.5rem; }
+.subject__body { --space: var(--s0); color: var(--text-body); }
+
+/* ----------------------------------------------------------------- entry -- */
+
+/* Gap between entries. Wide enough that the hairline above each one reads as
+   belonging to the entry below it rather than floating between two. */
+.entries { --space: var(--s2); }
+
+/* One job or one school. Title and org on the left, dates pushed right. Below
+   the wrap point the row becomes a stack, which is why the date is a flex
+   sibling rather than being absolutely positioned. */
+.entry__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--s-1) var(--s1);
+}
+
+.entry__title { margin-block-end: var(--s-2); }
+.entry__org { color: var(--text-body); }
+.entry__location { font-size: 0.875rem; color: var(--text-meta); }
+
+/* Uppercase and tracked out so the date reads as metadata at a glance, without
+   having to be smaller than is comfortable. */
+.entry__dates {
+  font-size: 0.875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-meta);
+  white-space: nowrap;
+}
+
+/* Capped independently of the section container, which is sized for the card
+   grid. The reference lets bullets run the full container width; at this
+   container size that is roughly 120 characters a line, so this is a deliberate
+   correction rather than a mismatch. */
+.entry__points { --space: var(--s-1); max-inline-size: var(--prose); font-size: 0.9375rem; }
+
+.entry__point { padding-inline-start: var(--s1); position: relative; }
+
+/* A small round dot rather than a dash. Offset in em so it tracks the first
+   line's optical centre at any font size. */
+.entry__point::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.72em;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+/* ----------------------------------------------------------------- certs -- */
+
+.certs__title { font-size: 1.5rem; }
+/* Reuses .entry__point for the dot marker, so it only overrides the size. */
+.certs__list { --space: var(--s-1); font-size: 0.9375rem; }
+
+/* Kept out of the list above on purpose: an in-progress certification sitting
+   among earned ones reads as earned to anyone skimming. */
+.certs__progress { font-size: 0.9375rem; color: var(--text-muted); }
+.certs__progress strong { color: var(--text); font-weight: 600; }
+
+/* ------------------------------------------------------------------ card -- */
+
+/* Tighter than a section, because a card's lines are a single dense unit that
+   has to survive being read at a glance in a two-column grid. */
+.card { --space: var(--s-1); }
+.card__title { margin-block-end: var(--s-2); }
+
+/* Names the card's role in the lifecycle, so the section reads as a sequence
+   rather than a pile of unrelated repositories. */
+.card__eyebrow {
+  font-size: 0.875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-meta);
+}
+
+/* The metric leads the card. It is the one deliberate divergence from the
+   reference layout, so it gets the visual weight to match. */
+.card__metric {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--accent);
+}
+/* A card whose metric has not been measured yet collapses the slot rather than
+   leaving a gap, so an honest empty value costs nothing visually. */
+.card__metric:empty { display: none; }
+
+.card__desc { font-size: 0.9375rem; }
+
+/* A description long enough to need two paragraphs gets a tighter gap than the
+   card's other children, which .stack spaces at --s1. The two halves have to
+   still read as one description broken in two rather than as two unrelated
+   blocks, and the card is already a stack of separate elements. */
+.card__desc + .card__desc { margin-block-start: var(--s-1); }
+
+.card__desc code, .card__metric code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent-soft);
+}
+
+.card__stack { font-size: 0.875rem; color: var(--text-muted); }
+.card__stack-label { color: var(--text); font-weight: 600; }
+
+/* Pushed to the bottom of the card so link rows align across a grid row even
+   when the descriptions above them differ in length. */
+.card__links { --space: var(--s-1); margin-block-start: auto; padding-block-start: var(--s-1); }
+
+/* ------------------------------------------------------------- highlight -- */
+
+/* Three themed blocks rather than a bullet list, so each area gets framed
+   instead of enumerated. Separation comes from weight and colour rather than
+   size: the title is full contrast, the paragraph under it is a step down. */
+.highlights { --space: var(--s1); }
+.highlight { --space: var(--s-2); }
+.highlight__title { font-size: 1.25rem; }
+.highlight__body { font-size: 0.9375rem; }
+
+/* ---------------------------------------------------------------- resume -- */
+
+.resume__actions { --space: var(--s-1); margin-block-start: var(--s1); }
+
+/* --------------------------------------------------------------- contact -- */
+
+/* Buttons rather than a list of bare links. A contact section is the one place
+   on the page where every item is an action, so every item is a control. */
+.contact__actions { --space: var(--s-1); }
+
+/* ---------------------------------------------------------------- footer -- */
+
+.site-footer {
+  margin-block-start: var(--s2);
+  border-block-start: var(--border-thin) solid var(--border);
+}
+
+.site-footer__bar {
+  --space: var(--s1);
+  justify-content: space-between;
+  padding-block: var(--s1);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.site-footer__links { --space: var(--s1); }
+
+.site-footer__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.site-footer__link:hover { color: var(--text); }
+
+/* The counter is a Cloud Resume Challenge artifact, not a design feature.
+   Legible, and deliberately quiet. */
+.site-footer__counter {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-meta);
+}
+
+/* ----------------------------------------------------------------- print -- */
+
+@media print {
+  .site-header, .hero__actions, .resume__actions,
+  .contact__actions, .site-footer__counter { display: none; }
+  .js-reveal .reveal { opacity: 1; transform: none; }
+  body { font-size: 11pt; color: #000; background: #fff; }
+  h1, h2, h3, .entry__org, .card__stack-label { color: #000; }
+  .hero { padding-block-start: 0; }
+}

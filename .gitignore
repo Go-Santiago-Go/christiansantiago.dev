@@ -1,0 +1,43 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Terraform variable files may carry account IDs or contact details.
+# Real values belong in CI variables or terraform.tfvars, never in git.
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Go build output (Phase 2)
+bootstrap
+bootstrap.zip
+
+# Node, used only by the Playwright e2e suite (Phase 3)
+node_modules/
+test-results/
+playwright-report/
+
+# Private working instructions and the candid build plan. This repo is public and
+# these carry personal career notes that are not for a recruiter audience.
+CLAUDE.local.md
+build-plan.md
+
+# Working notes and draft write-ups stay local. These are scratch material for
+# LinkedIn posts and the Phase 5 blog post, not part of the published repo.
+notes/
+content/
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/

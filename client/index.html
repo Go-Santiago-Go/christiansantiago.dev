@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Christian Santiago — Cloud &amp; Software Engineer | AWS, Go, Python, Terraform</title>
+  <meta name="description" content="Cloud and software engineer focused on AWS infrastructure, data pipelines, cost efficiency, and service reliability. Go, Python, and Terraform. Portfolio, experience, and resume.">
+  <link rel="canonical" href="https://christiansantiago.dev/">
+
+  <!-- Open Graph drives the link preview when the site is shared on LinkedIn,
+       which is the primary way recruiters will encounter it. -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://christiansantiago.dev/">
+  <meta property="og:title" content="Christian Santiago — Cloud &amp; Software Engineer | AWS, Go, Python, Terraform">
+  <meta property="og:description" content="Cloud and software engineer focused on AWS infrastructure, data pipelines, cost efficiency, and service reliability. Infrastructure as code, system design, and CI/CD.">
+  <meta property="og:image" content="https://christiansantiago.dev/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Matches the page background so mobile browser chrome blends into the
+       site instead of framing it in a contrasting bar. -->
+  <meta name="theme-color" content="#050814">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Lets keyboard and screen reader users jump past the nav on every page load. -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="center">
+      <div class="site-header__bar cluster">
+        <a class="nav__brand" href="#hero">Christian Santiago</a>
+        <nav aria-label="Primary">
+          <ul class="nav__list cluster">
+            <li><a class="nav__link" href="#about">About</a></li>
+            <li><a class="nav__link" href="#experience">Experience</a></li>
+            <li><a class="nav__link" href="#education">Education</a></li>
+            <li><a class="nav__link" href="#projects">Projects</a></li>
+            <li><a class="nav__link" href="#resume">Resume</a></li>
+            <li><a class="nav__link" href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <!-- Resume CTA appears in three places: header, hero, footer. -->
+        <a class="btn btn--primary" href="/resume.pdf" target="_blank" rel="noopener">View Resume</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section id="hero" class="hero">
+      <!-- Decorative only, and inert: aria-hidden keeps it out of the
+           accessibility tree, pointer-events:none keeps it from swallowing the
+           clicks it sits on top of. main.js drives the spotlight's position;
+           with scripting off it simply parks at its resting offset. -->
+      <div class="hero__glow" aria-hidden="true">
+        <div class="hero__grid"></div>
+        <div class="hero__spotlight"></div>
+      </div>
+      <div class="center">
+        <div class="hero__body stack reveal">
+          <h1>Christian Santiago</h1>
+          <!-- Deliberately the AWS credential alone. The other certifications
+               live in the Education section; promoting all of them here costs
+               the hero more weight than the extra signal is worth. -->
+          <p class="hero__badge">AWS Certified Developer</p>
+          <p class="hero__title">
+            Cloud and software engineer focused on AWS infrastructure, data pipelines, cost
+            efficiency, and service reliability.
+          </p>
+          <p class="hero__blurb prose">
+            I came up through infrastructure monitoring, incident response, and the data engineering
+            around it, working directly with the clients and stakeholders who depended on the
+            output. Lately I have been building AWS infrastructure in Go, Python, and Terraform for
+            generative AI and machine learning workloads.
+          </p>
+          <div class="hero__actions cluster">
+            <a class="btn btn--primary" href="/resume.pdf" target="_blank" rel="noopener">View Resume</a>
+            <a class="btn" href="https://github.com/Go-Santiago-Go" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn" href="#contact">Contact</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="section__inner center stack">
+
+        <div class="section__head stack reveal">
+          <p class="section__kicker">About</p>
+          <h2>A bit about me.</h2>
+          <p class="section__lede">A short professional summary and some personal context.</p>
+        </div>
+
+        <div class="grid grid--halves">
+
+          <div class="subject rule stack reveal">
+            <h3 class="subject__title">Professional</h3>
+            <div class="subject__body stack">
+              <p>
+                My work has spanned both ends of the scale, and each end teaches something the other
+                cannot. Enterprise infrastructure, where a change to a shared system has a blast
+                radius and you learn to respect it. Small and mid-sized businesses, where there is
+                no layer between you and the client who needs the answer, so you gather the
+                requirement, build the pipeline, and present the result yourself.
+              </p>
+              <p>
+                I spent four years in an enterprise environment on infrastructure monitoring and
+                incident response, and the data engineering around it: thresholds and event-driven
+                alert routing on the detection side, telemetry pipelines and dimensional models on
+                the side that turned resolved incidents into failure patterns. All of it through an
+                on-premise to hybrid AWS migration. Since then, systems integration, ETL pipelines,
+                BI reporting for leadership, and freelance application development.
+              </p>
+              <p>
+                The through line in my work is system design. Good architecture has less to do with
+                knowing services than with asking what tradeoffs you are making with a decision, and
+                being able to answer. Reliability against cost. Simplicity against flexibility.
+                Shipping now against unwinding it later. There is rarely a correct answer, only one
+                that fits the requirement in front of you, so I reach for the smallest thing that
+                meets it rather than the largest thing that impresses. I treat those decisions as
+                revisable rather than permanent, and let telemetry rather than my own opinion tell
+                me when one needs revisiting. The habit came from presenting technical decisions to
+                leadership and non-technical stakeholders, who were never going to accept "because
+                it is best practice" as an answer.
+              </p>
+              <p>
+                Lately I have been pointing that at generative AI and machine learning workloads,
+                in Go, Python, and Terraform on AWS. MLOps is the direction I am headed. I am an AWS
+                Certified Developer, studied computer science at Vanderbilt University and cloud
+                engineering through the AWS Cloud Institute.
+              </p>
+            </div>
+          </div>
+
+          <div class="subject rule stack reveal">
+            <h3 class="subject__title">Personal</h3>
+            <div class="subject__body stack">
+              <p>
+                Most of what I do outside work comes down to getting people in the same room. That
+                looks like cooking dinner for a friend group, or pulling friends who live in
+                different cities onto a call to play through whatever strange indie game somebody
+                turned up on Steam. The activity is mostly a pretext. The part I actually care about
+                is that everyone showed up.
+              </p>
+              <p>
+                I cook a lot, and I recently restored my first cast-iron skillet, which took
+                considerably longer than I expected. Mostly sanding rust off and putting thin coats
+                of oil on it in the oven, over and over, until it stopped being orange. Worth it,
+                though. Cast iron holds heat the way a thin pan cannot, so food hits the surface
+                and actually sears the way you see in cooking videos.
+              </p>
+              <p>
+                I am in Nashville, so on a given week you might find me at a community event at my
+                local bodybuilding gym, at a developer meetup at Bitcoin Park, or riding my road bike
+                through a state park with no particular destination in mind.
+              </p>
+              <p>
+                I like learning for its own sake, and I have never really stopped. At the moment
+                that means grinding through the long path of Math Academy's Mathematics for Machine
+                Learning track, keeping up with deeplearning.ai, and working through DataCamp's AI
+                and machine learning courses, then going and building something with whatever I just
+                picked up. That last part is the honest explanation for most of the projects on this
+                page. They started as things I wanted to understand rather than things I needed to
+                ship.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="experience" class="section">
+      <div class="section__inner center stack">
+
+        <div class="section__head stack reveal">
+          <p class="section__kicker">Experience</p>
+          <h2>Professional Experience</h2>
+          <p class="section__lede">Roles, and the work that mattered in each.</p>
+        </div>
+
+        <!-- Reverse chronological by start date, which is the order a recruiter
+             scans for and the order the reference site uses. -->
+        <!-- VERIFY: locations below are inferred from the Nashville metro area on the
+             LinkedIn profile. Confirm each one before this ships. -->
+        <div class="entries stack">
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Cloud Engineering Resident</h3>
+                <p class="entry__org">AWS Cloud Institute</p>
+                <p class="entry__location">Remote</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2025-09">Sep 2025</time> &ndash;
+                <time datetime="2026-07">Jul 2026</time>
+              </p>
+            </div>
+            <ul class="entry__points stack">
+              <li class="entry__point">Developed cloud application skills through hands-on AWS labs across serverless and container services, building event-driven workflows with AWS Lambda, Amazon API Gateway, Amazon DynamoDB, Amazon S3, Amazon SNS, and Amazon SQS, orchestrating multi-step processes with AWS Step Functions, and deploying containerized applications with Docker, Amazon ECS, Amazon EKS, and Amazon ECR.</li>
+              <li class="entry__point">Applied AWS AI/ML services including Amazon Bedrock, Amazon Rekognition, and Amazon Textract, and built Retrieval Augmented Generation (RAG) workflows with LangChain, practicing Infrastructure as Code (IaC) and CI/CD, with least-privilege IAM and observability through Amazon CloudWatch and AWS X-Ray.</li>
+            </ul>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Business Systems Analyst</h3>
+                <p class="entry__org">Price Printing</p>
+                <p class="entry__location">Nashville, TN</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2025-05">May 2025</time> &ndash;
+                <time datetime="2026-02">Feb 2026</time>
+              </p>
+            </div>
+            <ul class="entry__points stack">
+              <li class="entry__point">Built and maintained ETL pipelines for client-supplied data feeds, automating recurring data formatting and ingestion in Python, and integrated CRM, order management, and inventory systems, resolving the cross-platform data inconsistencies that were breaking fulfillment workflows.</li>
+              <li class="entry__point">Performed dimensional data modeling with star and snowflake schemas and surfaced it through SQL and BI dashboards, isolating analytical reporting from the transactional source systems.</li>
+            </ul>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Freelance Developer</h3>
+                <p class="entry__org">Independent</p>
+                <p class="entry__location">Nashville, TN</p>
+              </div>
+              <p class="entry__dates"><time datetime="2022-08">Aug 2022</time> &ndash; Present</p>
+            </div>
+            <ul class="entry__points stack">
+              <li class="entry__point">Engineered automated ETL workflows to ingest, normalize, and validate raw client data from disparate third-party sources, enforcing the strict data hygiene and schema consistency required for trusted downstream workflows.</li>
+              <li class="entry__point">Delivered short-cycle contract engagements integrating client systems with industry-specific CRMs and third-party APIs, working against vendor platforms.</li>
+            </ul>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Software Engineering Resident</h3>
+                <p class="entry__org">Codesmith</p>
+                <p class="entry__location">Remote</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2021-05">May 2021</time> &ndash;
+                <time datetime="2022-04">Apr 2022</time>
+              </p>
+            </div>
+            <ul class="entry__points stack">
+              <li class="entry__point">Designed REST APIs and microservice architectures across PostgreSQL and MongoDB in an intensive full-stack program covering system design and DevOps.</li>
+              <li class="entry__point">Built and contributed to open source products serving real developer communities, working in Agile cycles with pair programming and code review throughout.</li>
+            </ul>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Infrastructure and Monitoring Analyst</h3>
+                <p class="entry__org">UPS</p>
+                <p class="entry__location">Nashville, TN</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2018-09">Sep 2018</time> &ndash;
+                <time datetime="2022-08">Aug 2022</time>
+              </p>
+            </div>
+            <ul class="entry__points stack">
+              <li class="entry__point">Developed incident response and infrastructure monitoring for high-throughput facility operations, establishing precise CloudWatch telemetry thresholds to detect anomalies and reduce mean-time-to-resolution.</li>
+              <li class="entry__point">Decoupled facility systems with SNS and SQS event-driven workflows to route operational alerts, reducing incident response lag across the distribution environment.</li>
+              <li class="entry__point">Transformed post-mortem incident reports into actionable data, designing dimensional OLAP models that isolated analytical queries from transactional traffic to track systemic failure patterns.</li>
+              <li class="entry__point">Contributed to an on-premise to hybrid AWS migration, working hands-on with Lambda, API Gateway, S3, RDS, DynamoDB, SNS, SQS, and CloudWatch.</li>
+              <li class="entry__point">Diagnosed and resolved PLC faults on automated conveyor and sorting systems to protect throughput targets.</li>
+            </ul>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Digital Marketing Analyst</h3>
+                <p class="entry__org">Independent</p>
+                <p class="entry__location">Nashville, TN</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2018-05">May 2018</time> &ndash;
+                <time datetime="2020-02">Feb 2020</time>
+              </p>
+            </div>
+            <ul class="entry__points stack">
+              <li class="entry__point">Analyzed campaign performance in Python and Power BI, surfacing trends in conversion rate, ROAS, and audience engagement that drove spend and targeting decisions.</li>
+              <li class="entry__point">Aggregated and cleaned multi-source campaign data with SQL and Excel models, and tracked downstream site behavior and attribution through Google Analytics.</li>
+              <li class="entry__point">Planned and ran direct-to-consumer paid campaigns across multiple e-commerce accounts, owning budget, targeting, and creative iteration.</li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="section">
+      <div class="section__inner center stack">
+
+        <div class="section__head stack reveal">
+          <p class="section__kicker">Education</p>
+          <h2>Education</h2>
+          <p class="section__lede">Academic background and certifications.</p>
+        </div>
+
+        <div class="entries stack">
+
+          <!-- Vanderbilt carries no date range on purpose; that matches the profile. -->
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Vanderbilt University</h3>
+                <p class="entry__org">Computer Science</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">AWS Cloud Institute</h3>
+                <p class="entry__org">Cloud Engineering</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2025-09">Sep 2025</time> &ndash;
+                <time datetime="2026-07">Jul 2026</time>
+              </p>
+            </div>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Codesmith</h3>
+                <p class="entry__org">Software Engineering Immersive</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2021-05">May 2021</time> &ndash;
+                <time datetime="2022-04">Apr 2022</time>
+              </p>
+            </div>
+          </article>
+
+          <div class="certs rule stack reveal">
+            <h3 class="certs__title">Certifications</h3>
+            <ul class="certs__list entry__points stack">
+              <li class="entry__point">AWS Certified Developer</li>
+              <li class="entry__point">AWS Certified Cloud Practitioner</li>
+              <li class="entry__point">AI Engineer for Data Scientists Associate (DataCamp Exam)</li>
+              <li class="entry__point">Data Engineer Associate (DataCamp Exam)</li>
+              <li class="entry__point">Data Science with AI &ndash; Professional Certification (Codecademy 12 week training)</li>
+              <li class="entry__point">Apollo Graph Developer</li>
+            </ul>
+            <p class="certs__progress">
+              Currently studying and developing for the <strong>AWS Certified Generative AI Developer &ndash; Professional</strong> certification.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <div class="section__inner center stack">
+
+        <div class="section__head stack reveal">
+          <p class="section__kicker">Projects</p>
+          <h2>Side Projects</h2>
+          <p class="section__lede">
+            A few cool things I've recently studied and implemented.
+          </p>
+        </div>
+        <div class="grid grid--halves">
+
+          <article class="card rule stack reveal">
+            <h3 class="card__title">retrain-pipeline</h3>
+            <p class="card__eyebrow">Training and governance</p>
+            <!-- States the problem rather than the build status, matching the
+                 inference-gateway card. The two remaining cards still open on
+                 "Deployed and verified"; carry this treatment across when their
+                 copy is rewritten. -->
+            <p class="card__metric">Retraining pipelines automate the training but not the judgment: no contract on incoming labels, no lineage from a model back to the rows that made it, and one bad batch can promote itself to production.</p>
+            <!-- Copy tracks resume/resume.tex, which carries four length
+                 variants of this bullet. This is the two-sentence one, chosen to
+                 sit level with inference-gateway, its partner in the two-column
+                 grid row. Edit the resume first and mirror here; if the row
+                 partner's length changes, reconsider which variant belongs. -->
+            <!-- Split on the boundary the copy already had: the data path, then
+                 the promotion path. Same words as the resume variant, one break
+                 added, so parity with resume/resume.tex still holds. -->
+            <p class="card__desc">
+              CI-driven MLOps retraining pipeline on Amazon SageMaker at $0/month idle cost and
+              $0.0026 per training run: Great Expectations gates new labeled data as a required
+              check on every pull request, short-circuiting on git diff so code-only PRs return in
+              5s against 56s for data PRs, and DVC versions each dataset in an S3 remote with git
+              holding only the content-hash pointer, which carries into the training job name for
+              idempotent submission.
+            </p>
+            <p class="card__desc">
+              A custom Go CLI-tool available to the CI runner submits the job and
+              registers the result as PendingManualApproval in 3m41s from merge, under a CI role of
+              21 named IAM actions with zero wildcards that omits UpdateModelPackage, so no model is
+              promoted without a human and CI could not approve one if it tried.
+            </p>
+            <!-- Capabilities sit alongside technologies here, as on the
+                 inference-gateway card: Data Quality Gates, Dataset Lineage and
+                 Human-in-the-Loop Approval are what was built rather than what
+                 was installed, and they carry the governance signal that the
+                 service names alone do not. -->
+            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Python &middot; Amazon SageMaker &middot; Model Registry &middot; Great Expectations &middot; Data Quality Gates &middot; DVC &middot; Dataset Lineage &middot; Human-in-the-Loop Approval &middot; Idempotent Job Submission &middot; Least-Privilege IAM &middot; scikit-learn &middot; S3 &middot; Terraform &middot; GitHub Actions OIDC &middot; CloudWatch</p>
+            <p class="card__links cluster">
+              <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/retrain-pipeline" target="_blank" rel="noopener">GitHub</a>
+            </p>
+          </article>
+
+          <article class="card rule stack reveal">
+            <h3 class="card__title">inference-gateway</h3>
+            <p class="card__eyebrow">Serving</p>
+            <!-- States the problem rather than the build status. The three
+                 other cards still open on "Deployed and verified", which is the
+                 repetition this replaces; carry the same treatment across when
+                 their copy is rewritten. -->
+            <p class="card__metric">Model endpoints bill by the token but tell you nothing: no per-caller attribution, no spend ceiling, and one runaway client can drain a month's budget overnight.</p>
+            <!-- Copy tracks resume/resume.tex verbatim. The resume is the source
+                 of truth for this card, so edit it there first and mirror here
+                 rather than rewording one to fit the other's voice.
+
+                 Split after the first sentence: what the service is, then what it
+                 costs and controls. Same words as the resume bullet, one break
+                 added, matching the treatment on the retrain-pipeline card. -->
+            <p class="card__desc">
+              LLM inference gateway in Go adding the operational layer on top of Amazon Bedrock:
+              Server-Sent Events (SSE) token streaming, per-key API authentication and rate
+              limiting, and retries with backoff and jitter.
+            </p>
+            <p class="card__desc">
+              Meters token cost per request and
+              attributes it per API key in structured logs, with per-key token buckets enforcing a
+              hard ~$10.50/day spend ceiling in middleware rather than a post-hoc billing alarm.
+              Cut worst-case Bedrock API calls per request 67% (9 &rarr; 3) by replacing the AWS
+              SDK's nested default retryer with a single explicit transient-only loop. Deployed on
+              Amazon ECS Fargate with Terraform IaC.
+            </p>
+            <!-- Two deliberate groups: what the service is and does on the
+                 first line, what runs and ships it on the second. The break is
+                 hard rather than left to wrapping so the split lands in the same
+                 place at every viewport width. Rate Limiting and Cost Metering
+                 are capabilities rather than technologies, listed here because
+                 they are what distinguishes this from a Bedrock passthrough. -->
+            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Server-Sent Events &middot; Rate Limiting &middot; Cost Metering<br>ECS Express Mode on Fargate &middot; Terraform &middot; Docker &middot; GitHub OIDC &middot; CloudWatch &middot; CloudFront &middot; TypeScript &middot; React</p>
+            <p class="card__links cluster">
+              <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/inference-gateway" target="_blank" rel="noopener">GitHub</a>
+            </p>
+          </article>
+
+          <article class="card rule stack reveal">
+            <h3 class="card__title">rag-api</h3>
+            <p class="card__eyebrow">Retrieval</p>
+            <p class="card__metric">Retrieval systems return passages but not accountability: no link from a claim back to the text that supports it, no way to separate a retrieval miss from a generation error, and a confidently wrong answer reads exactly like a right one.</p>
+            <!-- Two paragraphs on the same seam the other cards use: what the
+                 service is and returns, then what it cost to find out and how it
+                 is locked down. -->
+            <!-- Trimmed from a 1175-character version to sit level with the
+                 other cards. What came out, in case it should go back: "1024
+                 dimensions", the two-stack Terraform teardown story and its
+                 $0.58 against $80 comparison, and the security group with no
+                 inbound rule that leaves tasks unreachable except through the
+                 load balancer. That last one is the strongest of the three and
+                 the first thing to restore if this card gets room again. -->
+            <p class="card__desc">
+              RAG service in Go on Amazon ECS Fargate at $0.58/month all in, Bedrock inference
+              included: 500-rune overlapping chunks that never split a multi-byte character, Titan
+              v2 embeddings, and top-5 cosine search in pgvector, returning { answer, sources[] } so
+              a wrong answer traces to whether retrieval or generation failed.
+            </p>
+            <p class="card__desc">
+              Profiled at p50 1.8s / p95 3.0s, with 88% of that in Bedrock generation against
+              0.77ms for the vector search, which ruled out indexing the vector store and pointed at
+              token streaming as the only change that would move perceived latency. RDS owns the
+              database password
+              and ECS injects it from Secrets Manager at launch, so it never enters the image or
+              Terraform state.
+            </p>
+            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Titan v2 Embeddings &middot; pgvector &middot; Vector Search &middot; Source Citations &middot; RDS PostgreSQL &middot; ECS Express Mode on Fargate &middot; Multi-Tier VPC &middot; Terraform &middot; Docker &middot; Distroless &middot; GitHub OIDC &middot; Secrets Manager &middot; CloudWatch</p>
+            <p class="card__links cluster">
+              <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/rag-api" target="_blank" rel="noopener">GitHub</a>
+            </p>
+          </article>
+
+          <article class="card rule stack reveal">
+            <h3 class="card__title">christiansantiago.dev</h3>
+            <p class="card__eyebrow">Edge and delivery</p>
+            <!-- The one card that deliberately breaks the shape the other three
+                 share. They each name a problem and end on its consequence; this
+                 one names the problem and ends on the answer. Four cards built
+                 the same way stop reading as observations and start reading as a
+                 template, which is what the old "Deployed and verified" openers
+                 did. Keep this one different.
+
+                 Extend with the counter once Phase 3 lands, and with the measured
+                 Lambda cold start after Phase 2. -->
+            <p class="card__metric">Static hosting hides its own risks: a bucket left public, a deploy nobody can reproduce, and long-lived keys sitting in CI forever. This one has none of the three.</p>
+            <!-- The only card with no measured figures, because the project is
+                 not built yet. It grows on architecture rather than numbers, and
+                 every claim here is a design decision that either holds or does
+                 not once Terraform applies. Add the counter throughput and the
+                 measured Lambda cold start after Phases 2 and 3 rather than
+                 estimating either now. -->
+            <p class="card__desc">
+              A Cloud Resume Challenge build. Static page in a private S3 bucket reachable only
+              through CloudFront by Origin Access Control, so the bucket has no public URL at any
+              point. The visitor counter runs on a Go Lambda, and
+              increments through a single atomic DynamoDB update rather than a read followed by a
+              write, so concurrent visitors cannot race each other into a lost count.
+            </p>
+            <p class="card__desc">
+              Every resource is Terraform against remote state and every deploy is a git push
+              authenticated by GitHub OIDC, so no long-lived AWS keys exist anywhere, including in
+              CI. The DynamoDB client sits behind a Go interface, so the handler unit-tests against
+              a fake with no AWS calls at all, and a Playwright check runs against production after
+              each deploy: if the counter does not render on the live page, the deploy failed.
+            </p>
+            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go on Lambda arm64 &middot; DynamoDB &middot; Atomic Increments &middot; API Gateway HTTP API &middot; S3 &middot; CloudFront &middot; Origin Access Control &middot; Route 53 &middot; ACM &middot; Terraform &middot; Remote State &middot; GitHub OIDC &middot; Keyless Deploys &middot; Playwright E2E &middot; CloudWatch</p>
+            <p class="card__links cluster">
+              <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/christiansantiago.dev" target="_blank" rel="noopener">GitHub</a>
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="resume" class="section">
+      <div class="section__inner center stack">
+
+        <div class="section__head stack reveal">
+          <p class="section__kicker">Resume</p>
+          <h2>Resume</h2>
+          <p class="section__lede">Highlights here, full PDF linked below.</p>
+        </div>
+
+        <div class="grid grid--lead">
+
+          <div class="subject rule stack reveal">
+            <h3 class="subject__title">Highlights</h3>
+            <p class="subject__body">
+              My work has consistently sat where cloud architecture meets business intelligence:
+              close enough to the infrastructure to build it, close enough to the data to know what
+              it is for.
+            </p>
+            <!-- Section order mirrors the About narrative: infrastructure first, data second,
+                 the generative AI and ML work last, because that is the direction rather than
+                 the foundation. -->
+            <div class="highlights stack">
+
+              <div class="highlight stack">
+                <h4 class="highlight__title">Cloud and platform engineering</h4>
+                <p class="highlight__body">
+                  Experience building AWS-hosted services in Go and Python, REST APIs, Terraform
+                  defined infrastructure, and event-driven workflows on SNS and SQS, deployed
+                  through CI that authenticates by OIDC rather than stored keys.
+                </p>
+              </div>
+
+              <div class="highlight stack">
+                <h4 class="highlight__title">Monitoring and incident response</h4>
+                <p class="highlight__body">
+                  Track record of shortening incident response by setting CloudWatch alerting
+                  thresholds, routing operational alerts through event-driven workflows, and
+                  feeding incident telemetry into the reporting pipelines behind failure analysis.
+                </p>
+              </div>
+
+              <div class="highlight stack">
+                <h4 class="highlight__title">Data engineering and reporting</h4>
+                <p class="highlight__body">
+                  Background in ETL pipelines for client-supplied feeds, star and snowflake
+                  dimensional models that separate analytical reads from the transactional systems
+                  they compete with, and SQL-backed reporting dashboards presented directly to
+                  leadership.
+                </p>
+              </div>
+
+              <div class="highlight stack">
+                <h4 class="highlight__title">Services for generative AI and ML workloads</h4>
+                <p class="highlight__body">
+                  Three services deployed and verified on AWS covering training governance,
+                  retrieval, and inference serving, with data quality gates, private data tiers, and
+                  per-request token and cost accounting on a streaming gateway.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="subject rule stack reveal">
+            <h3 class="subject__title">The PDF</h3>
+            <p class="subject__body">
+              My current resume is viewable in the browser or available to download directly below.
+            </p>
+            <p class="resume__actions cluster">
+              <a class="btn btn--primary" href="/resume.pdf" target="_blank" rel="noopener">View Resume</a>
+              <a class="btn" href="/resume.pdf" download>Download PDF</a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="section__inner center stack">
+
+        <div class="section__head stack reveal">
+          <p class="section__kicker">Contact</p>
+          <h2>Connect</h2>
+          <p class="section__lede">Email, GitHub, and LinkedIn.</p>
+        </div>
+
+        <div class="contact rule stack reveal">
+          <p class="contact__note prose">
+            Always open to connecting, especially about cloud and software engineering work on AWS,
+            or roles where generative AI and machine learning workloads need someone to build the
+            infrastructure underneath them.
+          </p>
+          <div class="contact__actions cluster">
+            <a class="btn btn--primary" href="mailto:santiagothedeveloper@gmail.com">Email Christian</a>
+            <a class="btn" href="https://github.com/Go-Santiago-Go" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn" href="https://www.linkedin.com/in/christian-santiago-dev/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="btn" href="/resume.pdf" target="_blank" rel="noopener">Resume</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__bar center cluster">
+      <p>&copy; <span id="year">2026</span> christiansantiago.dev</p>
+      <div class="site-footer__links cluster">
+        <a class="site-footer__link" href="https://github.com/Go-Santiago-Go" target="_blank" rel="noopener">GitHub</a>
+        <a class="site-footer__link" href="https://www.linkedin.com/in/christian-santiago-dev/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="site-footer__link" href="mailto:santiagothedeveloper@gmail.com">Email</a>
+        <a class="site-footer__link" href="/resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <!-- Populated in Phase 3 by a fetch against the counter API. The fallback
+             text is what renders if that request fails, so it must read acceptably. -->
+        <span class="site-footer__counter">Visitors: <span id="visitor-count">&mdash;</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/main.js" defer></script>
+</body>
+</html>
