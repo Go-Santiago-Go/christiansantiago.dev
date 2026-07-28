@@ -1,0 +1,58 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+    # A commit touching only infra/ has no business republishing the site.
+    # The workflow itself is listed so changes to the deploy are testable.
+    paths:
+      - 'client/**'
+      - '.github/workflows/deploy-site.yml'
+
+# Declaring any permission resets every unlisted one to none, so contents:read
+# is required for checkout. id-token:write does not grant write access to
+# anything; it lets the job request an OIDC token be issued for it. Without it
+# the credentials step fails complaining about credentials rather than about
+# this block.
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # No access key and no GitHub secret. The job presents the token GitHub
+      # signed for this run, and STS returns credentials good for about an hour.
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::646278323015:role/christiansantiago-dev-deploy
+          aws-region: us-east-2
+
+      # --delete is what stops files removed from client/ living in the bucket
+      # forever. resume.pdf is held back because sync applies one Content-Type
+      # to every object it touches, so it cannot be pinned per file here.
+      - name: Publish site
+        run: |
+          aws s3 sync client/ s3://christiansantiago-dev-site/ \
+            --delete --exclude resume.pdf
+
+      # Uploaded alone so the type can be stated rather than guessed. The guess
+      # is made from the runner's mimetypes database, and a runner without a
+      # complete one yields binary/octet-stream, which makes the browser
+      # download the resume instead of rendering it in a tab.
+      - name: Publish resume with an explicit content type
+        run: |
+          aws s3 cp client/resume.pdf s3://christiansantiago-dev-site/resume.pdf \
+            --content-type application/pdf
+
+      # Objects are replaced in place, so the edge caches still hold the old
+      # copies until told otherwise. A single /* path counts as one invalidation
+      # against the monthly free allowance.
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id E2HBC6Q1SFI4NC \
+            --paths '/*'
