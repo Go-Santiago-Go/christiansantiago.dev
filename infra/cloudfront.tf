@@ -26,6 +26,20 @@ data "aws_cloudfront_cache_policy" "optimized" {
   name = "Managed-CachingOptimized"
 }
 
+# The counter must never be cached. Under the optimized policy above the edge
+# would hold the first response and serve one frozen number to everyone while
+# DynamoDB kept incrementing correctly behind it.
+data "aws_cloudfront_cache_policy" "disabled" {
+  name = "Managed-CachingDisabled"
+}
+
+# Forwards everything the viewer sent except Host. execute-api routes on Host
+# and recognises only its own name, so passing the site's domain through gets
+# the request rejected as an unknown host.
+data "aws_cloudfront_origin_request_policy" "all_viewer_except_host" {
+  name = "Managed-AllViewerExceptHostHeader"
+}
+
 resource "aws_cloudfront_distribution" "site" {
   # Where CloudFront fetches from on a cache miss.
   origin {
@@ -40,6 +54,39 @@ resource "aws_cloudfront_distribution" "site" {
     origin_id = "site-bucket"
 
     origin_access_control_id = aws_cloudfront_origin_access_control.site.id
+  }
+
+  # The counter, served from this domain so the browser makes no cross origin
+  # request and CORS never enters the picture.
+  origin {
+    # api_endpoint is a full URL and this wants a bare hostname.
+    domain_name = replace(aws_apigatewayv2_api.counter.api_endpoint, "https://", "")
+    origin_id   = "counter-api"
+
+    # Required for anything that is not an S3 origin. No origin access control
+    # here: the API is reachable directly at its execute-api URL, and locking
+    # that down needs a shared secret header rather than a signature.
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  # Evaluated before the default behavior, which is what routes /api/ to the
+  # API and leaves everything else going to the bucket.
+  ordered_cache_behavior {
+    path_pattern     = "/api/*"
+    target_origin_id = "counter-api"
+
+    viewer_protocol_policy = "redirect-to-https"
+
+    allowed_methods = ["GET", "HEAD"]
+    cached_methods  = ["GET", "HEAD"]
+
+    cache_policy_id          = data.aws_cloudfront_cache_policy.disabled.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_except_host.id
   }
 
   default_cache_behavior {

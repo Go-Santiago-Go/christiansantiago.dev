@@ -24,17 +24,15 @@ Route 53 ──▶ CloudFront ──▶ S3 (private bucket)
              ACM cert       reachable only through
              HTTPS, OAC     Origin Access Control
 
-API Gateway (HTTP API) ──▶ Lambda (Go, provided.al2023, arm64)
-GET /api/count               └──▶ DynamoDB (on demand, atomic ADD)
+CloudFront /api/* ──▶ API Gateway (HTTP API)
+  caching disabled      GET /api/count
+                          └──▶ Lambda (Go, provided.al2023, arm64)
+                                 └──▶ DynamoDB (on demand, atomic ADD)
 ```
 
 Planned, in phase order:
 
 ```
-CloudFront /api/* ──▶ API Gateway     puts the counter on this domain,
-                                      so the browser makes no cross
-                                      origin request at all
-
 CloudWatch alarms ──▶ SNS ──▶ email
 ```
 
@@ -134,12 +132,17 @@ the Lambda duration on this workload.
 `logs:CreateLogGroup` across the account. Since Terraform creates the group, the function only needs
 to write streams into its own.
 
-Planned, and stated here because it shapes the design already:
+**The counter is served from this domain through a CloudFront `/api/*` behaviour**, so the browser
+makes no cross origin request and CORS is designed out rather than configured. Two settings carry
+that behaviour. `Managed-CachingDisabled`, because under the site's caching policy the edge would
+serve one frozen count to everyone while DynamoDB incremented correctly behind it. And
+`Managed-AllViewerExceptHostHeader`, because `execute-api` routes on `Host` and rejects the site's
+domain as unknown.
 
-**The counter will be served from this domain through a CloudFront `/api/*` behaviour**, so the
-browser makes no cross origin request and CORS is designed out rather than configured. That
-behaviour must disable caching, or the edge serves a frozen count while DynamoDB increments
-correctly behind it.
+The honest cost is a hop. Measured from one location, the counter is about 80 ms slower at p50
+through CloudFront than direct to `execute-api`, since the behaviour is uncacheable and the edge
+therefore never saves a round trip. What it buys is no CORS policy, no second certificate, and no
+custom domain on the API.
 
 ## Deploying
 
@@ -198,8 +201,8 @@ tripping it once a year.
   Terraform, deploy workflow on OIDC.
 - **Phase 2** — *complete.* Counter back end. DynamoDB, Go Lambda, API Gateway HTTP API, unit tests
   against a fake.
-- **Phase 3** Integration. CloudFront `/api/*` behaviour, JS fetches and renders the count,
-  Playwright end to end test against production.
+- **Phase 3** Integration. JS fetches and renders the count, Playwright end to end test against
+  production.
 - **Phase 4** CI/CD hardening. Plan on PR, apply on merge, e2e gating the deploy, CloudWatch alarms
   to SNS.
 - **Phase 5** Write up published, with the architecture diagram.
