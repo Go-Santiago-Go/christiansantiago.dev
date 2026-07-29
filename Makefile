@@ -1,4 +1,4 @@
-.PHONY: counter test fmt plan apply destroy
+.PHONY: counter test e2e fmt plan apply destroy
 
 BINARY := counter/bin/bootstrap
 
@@ -11,6 +11,11 @@ counter:
 
 test:
 	go test -C counter -race -cover ./...
+
+# Runs against the deployed site, so it asserts on whatever is live right now
+# rather than on the working tree. Point SITE_URL elsewhere to retarget it.
+e2e:
+	npm --prefix e2e test
 
 fmt:
 	go fmt -C counter ./...

@@ -1,0 +1,12 @@
+{
+  "name": "christiansantiago-e2e",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "author": "",
+  "private": "true",
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.62.0"
+  }
+}

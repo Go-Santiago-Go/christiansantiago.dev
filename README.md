@@ -6,10 +6,10 @@ A single page personal site on AWS, built the [Cloud Resume Challenge](https://c
 way. Static files on S3 behind CloudFront, every AWS resource declared in Terraform, and deploys that
 happen by pushing to `main` with no long lived AWS credentials anywhere.
 
-**Status: Phase 2 complete.** The site is live over HTTPS on the apex and `www`, the bucket is
-private, and the only way to publish is `git push`. The counter API is deployed and returns an
-incrementing count. It is not yet reachable from the site's own domain, and the page does not call
-it yet: both are Phase 3.
+**Status: Phase 3 complete.** The site is live over HTTPS on the apex and `www`, the bucket is
+private, and the only way to publish is `git push`. The counter is served from the site's own
+domain, the page fetches it on load, and an end to end test asserts that a real browser sees the
+number. That test is run by hand today; Phase 4 makes it gate the deploy.
 
 ## Architecture
 
@@ -51,6 +51,7 @@ the deploy uses. That moves to CI in Phase 4, where the back end pipeline needs 
 | `client/` | HTML, CSS, vanilla JS, `resume.pdf`, OG card. No framework, no build step. |
 | `counter/` | The Go Lambda. `cmd/counter` is the Lambda entry point, `internal/visits` the DynamoDB logic. |
 | `infra/` | Terraform. One state, remote in S3, covering the site stack and the counter. |
+| `e2e/` | The Playwright test. Development tooling, never uploaded with the site. |
 | `.github/workflows/` | `deploy-site.yml`, path filtered to `client/**`. |
 | `Makefile` | Builds the Lambda binary, which Terraform packages but cannot compile. |
 
@@ -132,6 +133,14 @@ the Lambda duration on this workload.
 `logs:CreateLogGroup` across the account. Since Terraform creates the group, the function only needs
 to write streams into its own.
 
+**The end to end test asserts the shape of the count, not its value.** The test's own page load
+increments the counter, so it changes the thing it measures and any exact number is stale before the
+assertion runs. It matches digits and commas anchored at both ends, which the em dash the markup
+ships with fails. That is the point: a dead counter leaves the em dash in place, and neither the Go
+unit test nor a curl against the API can see it, because the number exists only once JavaScript has
+run. `e2e/` carries a `package.json`, which does not give the site a build step. The deploy is still
+a byte for byte sync of `client/`, and nothing in `e2e/` is uploaded.
+
 **The counter is served from this domain through a CloudFront `/api/*` behaviour**, so the browser
 makes no cross origin request and CORS is designed out rather than configured. Two settings carry
 that behaviour. `Managed-CachingDisabled`, because under the site's caching policy the edge would
@@ -155,7 +164,13 @@ binary but cannot compile it, so anything reading the archive builds it first:
 make test      # go test -race -cover ./...
 make plan      # build the binary, then terraform plan
 make apply     # build the binary, then terraform apply
+make e2e       # playwright, against the deployed site
 ```
+
+`make e2e` needs Chromium and the system libraries it links against, which on a fresh machine is
+`npx playwright install chromium` followed by `sudo npx playwright install-deps chromium`. Under
+WSL, `sudo` resets `PATH` and finds the system node rather than an nvm one, so the second command
+wants `sudo env "PATH=$PATH"` in front of it.
 
 Expect a first apply to take 10 to 25 minutes. Certificate validation waits on DNS propagation, and
 a CloudFront distribution takes about ten minutes on its own to reach every edge location. The
@@ -201,8 +216,8 @@ tripping it once a year.
   Terraform, deploy workflow on OIDC.
 - **Phase 2** — *complete.* Counter back end. DynamoDB, Go Lambda, API Gateway HTTP API, unit tests
   against a fake.
-- **Phase 3** Integration. JS fetches and renders the count, Playwright end to end test against
-  production.
+- **Phase 3** — *complete.* Integration. JS fetches and renders the count, Playwright end to end
+  test against production.
 - **Phase 4** CI/CD hardening. Plan on PR, apply on merge, e2e gating the deploy, CloudWatch alarms
   to SNS.
 - **Phase 5** Write up published, with the architecture diagram.
