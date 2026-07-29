@@ -212,5 +212,16 @@ syncSpotlightMode();
 
 /* -------------------------------------------------------------- counter -- */
 
-// Phase 3 wires the visitor counter here: fetch the count API and write the
-// result into #visitor-count, leaving the em dash fallback in place on failure.
+// Same origin by design: the /api/* behaviour forwards this to API Gateway, so
+// the browser makes no cross origin request and there is no CORS to configure.
+async function showVisitorCount() {
+  const response = await fetch("/api/count");
+  if (!response.ok) throw new Error(`counter responded ${response.status}`);
+
+  const { count } = await response.json();
+  document.getElementById("visitor-count").textContent = count.toLocaleString();
+}
+
+// Nothing on the page depends on this resolving. The em dash in the markup is
+// the failure state, so a rejection is logged and otherwise left alone.
+showVisitorCount().catch((error) => console.error(error));
