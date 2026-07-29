@@ -18,9 +18,11 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Go build output (Phase 2)
+# Go build output and the zip Terraform packages from it. Build artifacts are
+# reproducible from source with `make counter`.
 bootstrap
 bootstrap.zip
+infra/build/
 
 # Node, used only by the Playwright e2e suite (Phase 3)
 node_modules/
