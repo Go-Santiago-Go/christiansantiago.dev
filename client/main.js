@@ -144,16 +144,22 @@ const spotlight = document.querySelector(".hero__spotlight");
 // which is also the cheapest possible path.
 const stillness = matchMedia("(prefers-reduced-motion: reduce)");
 
+// The effect is a cursor effect. A phone has no cursor, so it gets the resting
+// position and no listener at all.
+const cursor = matchMedia("(hover: hover) and (pointer: fine)");
+
 let pointerX = 0;
 let pointerY = 0;
 let spotQueued = false;
 
-// Where the light sits before the pointer has ever moved, and wherever it is
-// sent on resize. Off to the right and high up, so the hero reads as lit from
-// above rather than centred and symmetrical.
+// Where the light sits with no cursor to follow: before the first move, on a
+// touch screen, and after a resize. Off to the right and high up, so the hero
+// reads as lit from above. Anchored to the hero rather than the scroll offset,
+// since mobile fires resize when the URL bar collapses and that would otherwise
+// push the light out of the hero's overflow.
 function restPosition() {
   pointerX = window.innerWidth * 0.72;
-  pointerY = Math.min(window.innerHeight * 0.34, 360) + window.scrollY;
+  pointerY = Math.min(window.innerHeight * 0.34, 360) + hero.offsetTop;
 }
 
 function paintSpotlight() {
@@ -176,6 +182,9 @@ function queueSpotlight() {
 }
 
 function trackPointer(event) {
+  // A hybrid laptop reports a fine pointer and still delivers touch events, so
+  // the media query alone would let a finger drag the light around.
+  if (event.pointerType !== "mouse") return;
   pointerX = event.clientX;
   pointerY = event.clientY + window.scrollY;
   queueSpotlight();
@@ -185,7 +194,7 @@ function syncSpotlightMode() {
   removeEventListener("pointermove", trackPointer);
   restPosition();
   paintSpotlight();
-  if (!stillness.matches) {
+  if (!stillness.matches && cursor.matches) {
     addEventListener("pointermove", trackPointer, { passive: true });
   }
 }
@@ -197,6 +206,7 @@ addEventListener("resize", () => {
 
 // Re-evaluated live, so toggling the OS setting takes effect without a reload.
 stillness.addEventListener("change", syncSpotlightMode);
+cursor.addEventListener("change", syncSpotlightMode);
 
 syncSpotlightMode();
 
