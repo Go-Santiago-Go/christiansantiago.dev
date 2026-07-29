@@ -60,6 +60,45 @@ addEventListener(
 
 syncHeader(); // A reload partway down the page must not start in the top state.
 
+/* ---------------------------------------------------------- mobile nav -- */
+
+// A disclosure, not a modal: the page behind it stays scrollable and focus is
+// free to leave, so there is no trap here. Closed is display:none rather than
+// off screen, which keeps the panel's links out of the tab order.
+const navToggle = document.querySelector(".nav__toggle");
+const navMenu = document.getElementById("primary-menu");
+
+// aria-expanded is the state; the class only paints. Reading back off the
+// attribute is what stops the two from drifting apart.
+const navIsOpen = () => navToggle.getAttribute("aria-expanded") === "true";
+
+function setNav(open) {
+  navToggle.setAttribute("aria-expanded", String(open));
+  header.classList.toggle("site-header--nav-open", open);
+}
+
+navToggle.addEventListener("click", () => setNav(!navIsOpen()));
+
+// These are same-document anchors, so nothing navigates and nothing else would
+// close the panel over the section just chosen.
+navMenu.addEventListener("click", (event) => {
+  if (event.target.closest("a")) setNav(false);
+});
+
+addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !navIsOpen()) return;
+  setNav(false);
+  navToggle.focus(); // Closing must not strand focus inside display:none.
+});
+
+addEventListener("pointerdown", (event) => {
+  if (!navIsOpen() || header.contains(event.target)) return;
+  setNav(false);
+});
+
+// Rotating to landscape can cross the breakpoint with the panel still open.
+matchMedia("(min-width: 64rem)").addEventListener("change", () => setNav(false));
+
 /* ------------------------------------------------------------ active nav -- */
 
 // Maps each section to the nav link that points at it, so the observer callback

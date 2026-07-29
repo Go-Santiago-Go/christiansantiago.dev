@@ -31,18 +31,27 @@
     <div class="center">
       <div class="site-header__bar cluster">
         <a class="nav__brand" href="#hero">Christian Santiago</a>
-        <nav aria-label="Primary">
-          <ul class="nav__list cluster">
-            <li><a class="nav__link" href="#about">About</a></li>
-            <li><a class="nav__link" href="#experience">Experience</a></li>
-            <li><a class="nav__link" href="#education">Education</a></li>
-            <li><a class="nav__link" href="#projects">Projects</a></li>
-            <li><a class="nav__link" href="#resume">Resume</a></li>
-            <li><a class="nav__link" href="#contact">Contact</a></li>
-          </ul>
-        </nav>
-        <!-- Resume CTA appears in three places: header, hero, footer. -->
-        <a class="btn btn--primary" href="/resume.pdf" target="_blank" rel="noopener">View Resume</a>
+        <!-- Before the panel so focus moves brand, button, then what it opened. -->
+        <button class="nav__toggle" type="button" aria-label="Menu"
+                aria-expanded="false" aria-controls="primary-menu">
+          <span class="nav__toggle-bars" aria-hidden="true"></span>
+        </button>
+        <!-- The narrow-screen dropdown. display:contents at full width, so these
+             two stay direct children of the bar there. -->
+        <div class="nav__menu" id="primary-menu">
+          <nav aria-label="Primary">
+            <ul class="nav__list cluster">
+              <li><a class="nav__link" href="#about">About</a></li>
+              <li><a class="nav__link" href="#experience">Experience</a></li>
+              <li><a class="nav__link" href="#education">Education</a></li>
+              <li><a class="nav__link" href="#projects">Projects</a></li>
+              <li><a class="nav__link" href="#resume">Resume</a></li>
+              <li><a class="nav__link" href="#contact">Contact</a></li>
+            </ul>
+          </nav>
+          <!-- Resume CTA appears in three places: header, hero, footer. -->
+          <a class="btn btn--primary nav__cta" href="/resume.pdf" target="_blank" rel="noopener">View Resume</a>
+        </div>
       </div>
     </div>
   </header>

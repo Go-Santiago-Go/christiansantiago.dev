@@ -48,6 +48,8 @@
 
   --border-thin: 1px;
   --radius: 8px;
+  /* For surfaces large enough that the 8px corner reads as square. */
+  --radius-lg: 20px;
   --radius-pill: 999px;
 
   /* The header is fixed, so it is out of flow and contributes no height.
@@ -293,6 +295,10 @@ a:hover { color: var(--accent-soft); }
      the primitive leaves open. */
   --space: var(--s0);
   justify-content: space-between;
+  /* The hero clears a fixed --header-h, so a bar that wraps to two rows lands on
+     top of the h1. Narrow screens move the overflow into the panel instead. */
+  flex-wrap: nowrap;
+  position: relative; /* Containing block for the panel. */
   padding: var(--s-1) var(--s1);
   border: var(--border-thin) solid transparent;
   border-radius: var(--radius-pill);
@@ -345,14 +351,113 @@ a:hover { color: var(--accent-soft); }
    indicator only; the link's destination is unchanged, so it carries no ARIA. */
 .nav__link--active { background: rgb(255 255 255 / 0.10); color: var(--text); }
 
-/* The nav collapses to brand + resume CTA on narrow screens. The section links
-   are all reachable by scrolling, so hiding them costs nothing and avoids
-   shipping a hamburger menu and the JavaScript behind it. 64rem is where six
-   links plus the brand and the CTA stop fitting on one line. */
-.nav__list { display: none; }
-@media (min-width: 64rem) {
-  .nav__list { display: flex; }
+/* --------------------------------------------------- nav: narrow screens -- */
+
+/* Full-width state: no toggle, and a wrapper with no layout effect. */
+.nav__toggle { display: none; }
+.nav__menu { display: contents; }
+
+/* Every panel rule is scoped here rather than overridden above. display:contents
+   drops the wrapper from layout but not from the DOM, so a rule matching through
+   it would still apply at full width. 64rem is where the bar stops fitting. */
+@media (max-width: 63.9375rem) {
+
+.nav__toggle {
+  /* The tap minimum in both axes, which is also what makes it round. */
+  flex: none;
+  inline-size: var(--tap);
+  block-size: var(--tap);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: var(--border-thin) solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
+.nav__toggle:hover { background: var(--surface-hover); }
+
+/* Three bars from one element: the middle is the element itself. */
+.nav__toggle-bars,
+.nav__toggle-bars::before,
+.nav__toggle-bars::after {
+  display: block;
+  inline-size: 18px;
+  block-size: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.nav__toggle-bars { position: relative; }
+.nav__toggle-bars::before,
+.nav__toggle-bars::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+}
+.nav__toggle-bars::before { inset-block-start: -6px; }
+.nav__toggle-bars::after { inset-block-start: 6px; }
+
+/* Driven off aria-expanded, so the icon cannot disagree with what is announced. */
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars { background: transparent; }
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::before {
+  transform: translateY(6px) rotate(45deg);
+}
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__toggle-bars,
+  .nav__toggle-bars::before,
+  .nav__toggle-bars::after { transition: none; }
+}
+
+/* -------------------------------------------------------------- nav menu -- */
+
+/* The dropdown, hung from the bar's bottom edge and aligned to its sides. */
+.nav__menu {
+  display: none;
+  position: absolute;
+  inset-block-start: calc(100% + var(--s-2));
+  inset-inline: 0;
+  padding: var(--s-1);
+  border: var(--border-thin) solid var(--border);
+  border-radius: var(--radius-lg);
+  /* Opaque, not translucent: this covers body copy, and a backdrop blur is
+     silently dropped by an ancestor that clips or owns its own backdrop root. */
+  background: var(--bg);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+}
+
+/* main.js sets this alongside aria-expanded. */
+.site-header--nav-open .nav__menu { display: block; }
+
+/* Stacked full width, so the cluster's inline gap becomes row spacing. */
+.nav__menu .nav__list {
+  --space: 2px;
+  flex-direction: column;
+  align-items: stretch;
+  font-size: 1rem;
+}
+.nav__menu .nav__link {
+  justify-content: flex-start;
+  padding: var(--s-1) var(--s0);
+  border-radius: var(--radius);
+}
+
+/* Qualified by the panel so it outranks .btn's display, declared later. */
+.nav__menu .nav__cta { display: flex; margin-block-start: var(--s-1); }
+
+/* At 320px the toggle and gap leave the wordmark 164px of the bar's 224px, and
+   it wants 194. Tightened rather than truncated so it still reads as a name. */
+.site-header__bar { padding-inline: var(--s0); }
+.nav__brand { font-size: 0.8125rem; letter-spacing: 0.14em; }
+
+} /* end narrow-screen nav */
 
 /* -------------------------------------------------------------------- btn -- */
 
