@@ -61,3 +61,10 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id E2HBC6Q1SFI4NC \
             --paths '/*'
+
+  # A deploy that fails the smoke test is a failed deploy. The invalidation above
+  # returns as soon as CloudFront accepts it, not once the edges have caught up,
+  # so the suite's retries are load bearing here.
+  verify:
+    needs: deploy
+    uses: ./.github/workflows/e2e.yml
