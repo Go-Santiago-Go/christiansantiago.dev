@@ -187,11 +187,47 @@ resource "aws_iam_role" "apply" {
   assume_role_policy = data.aws_iam_policy_document.apply_assume_role.json
 }
 
-# Covers every service this stack creates, and excludes IAM by design, which is why
-# the inline policy below exists.
-resource "aws_iam_role_policy_attachment" "apply_power_user" {
-  role       = aws_iam_role.apply.name
-  policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
+# An allowlist of the eleven services this stack creates, replacing the
+# PowerUserAccess this used to attach. That policy is written as NotAction, so it
+# allowed everything but IAM, and every service AWS launches from now on along with
+# it. The expensive failure it left open was a leaked token starting compute.
+#
+# Honest about what this is: least service, not least privilege. It still permits
+# every action within these eleven, including deleting the state bucket. Enumerating
+# per action would break on each resource added, since apply needs the reads a
+# refresh performs as well as the writes.
+data "aws_iam_policy_document" "apply" {
+  statement {
+    sid = "ManageProjectServices"
+    actions = [
+      "acm:*",
+      "apigateway:*",
+      "budgets:*",
+      "cloudfront:*",
+      "cloudwatch:*",
+      "dynamodb:*",
+      "lambda:*",
+      "logs:*",
+      "route53:*",
+      "s3:*",
+      "sns:*",
+    ]
+    resources = ["*"]
+  }
+
+  # Read by the account ID data source, which every role ARN in this file is built
+  # from.
+  statement {
+    sid       = "IdentifySelf"
+    actions   = ["sts:GetCallerIdentity"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "apply" {
+  name   = "manage-project-services"
+  role   = aws_iam_role.apply.id
+  policy = data.aws_iam_policy_document.apply.json
 }
 
 data "aws_iam_policy_document" "apply_iam" {
