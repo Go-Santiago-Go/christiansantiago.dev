@@ -24,9 +24,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7
         with:
           go-version-file: counter/go.mod
           cache-dependency-path: counter/go.sum
@@ -45,9 +45,9 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7
         with:
           go-version-file: counter/go.mod
           cache-dependency-path: counter/go.sum
@@ -58,12 +58,12 @@ jobs:
       - name: Build the Lambda binary
         run: make counter
 
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: 1.15.5
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN }}
           aws-region: us-east-2
@@ -83,10 +83,11 @@ jobs:
 
       # Puts the diff on the run's summary page, so reviewing the pull request and
       # reading the plan are the same act.
-      # Through the environment rather than interpolated into the script. An
-      # expression expands before the shell parses the line, so plan output
-      # containing a backtick or a quote would run as part of this step, and the
-      # text being planned arrives from a pull request.
+      #
+      # Passed through the environment rather than interpolated into the script:
+      # an expression expands before the shell parses the line, so plan output
+      # holding a backtick would execute, and what gets planned here arrives from
+      # a pull request.
       - name: Publish the plan to the run summary
         if: always()
         env:
@@ -109,9 +110,9 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7
         with:
           go-version-file: counter/go.mod
           cache-dependency-path: counter/go.sum
@@ -119,12 +120,12 @@ jobs:
       - name: Build the Lambda binary
         run: make counter
 
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: 1.15.5
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
           aws-region: us-east-2

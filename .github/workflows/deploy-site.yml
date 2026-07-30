@@ -22,7 +22,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # No access key and no GitHub secret. The job presents the token GitHub
       # signed for this run, and STS returns credentials good for about an hour.
@@ -31,7 +31,7 @@ jobs:
       # identifier and grants nothing on its own. It lives outside the repo so
       # pointing the deploy at another account is a settings change rather than
       # a commit. Set it under Settings > Secrets and variables > Actions.
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: us-east-2
