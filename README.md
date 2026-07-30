@@ -6,19 +6,25 @@ A single page personal site on AWS, built the [Cloud Resume Challenge](https://c
 way. Static files on S3 behind CloudFront, every AWS resource declared in Terraform, and deploys that
 happen by pushing to `main` with no long lived AWS credentials anywhere.
 
-**Status: Phase 3 complete.** The site is live over HTTPS on the apex and `www`, the bucket is
+**Status: Phase 4 complete.** The site is live over HTTPS on the apex and `www`, the bucket is
 private, and the only way to publish is `git push`. The counter is served from the site's own
-domain, the page fetches it on load, and an end to end test asserts that a real browser sees the
-number. That test is run by hand today; Phase 4 makes it gate the deploy.
+domain and the page fetches it on load. Infrastructure is planned on every pull request and applied
+on merge, both over OIDC, and an end to end test runs against production afterwards: a deploy that
+fails the smoke test is a failed deploy. CloudWatch alarms report the counter's errors, latency, and
+invocation spikes to email.
 
 ## Architecture
 
 What exists today:
 
 ```
+pull request ──▶ go test, then terraform plan onto the run summary
+
 push to main ──▶ GitHub Actions
                    │  OIDC → AWS, no stored keys
-                   └── sync client/ → S3, then invalidate CloudFront
+                   ├── sync client/ → S3, then invalidate CloudFront
+                   ├── terraform apply
+                   └── Playwright, against the live site
 
 Route 53 ──▶ CloudFront ──▶ S3 (private bucket)
              ACM cert       reachable only through
@@ -30,19 +36,19 @@ CloudFront /api/* ──▶ API Gateway (HTTP API)
                                  └──▶ DynamoDB (on demand, atomic ADD)
 ```
 
-Planned, in phase order:
-
 ```
 CloudWatch alarms ──▶ SNS ──▶ email
+  errors, p95 latency, invocation spikes
 ```
 
 Home region is `us-east-2`. Route 53 and CloudFront are global. The ACM certificate is the one
 exception: CloudFront reads certificates only from `us-east-1`, so Terraform declares a second
 provider aliased to that region, used by the certificate and nothing else.
 
-`terraform apply` runs locally, not in CI. A second workflow with permission to change
-infrastructure buys little on a repo with one committer, and it would need a far broader role than
-the deploy uses. That moves to CI in Phase 4, where the back end pipeline needs it anyway.
+Three CI roles rather than one, because they answer to different trust. The deploy and apply roles
+are pinned to `main`. The plan role answers to pull requests, which are unreviewed code, so it is
+read only and runs `plan` with `-lock=false`. Sharing one role across both would hand every pull
+request the reach to rewrite DNS.
 
 ## Layout
 
@@ -52,7 +58,7 @@ the deploy uses. That moves to CI in Phase 4, where the back end pipeline needs 
 | `counter/` | The Go Lambda. `cmd/counter` is the Lambda entry point, `internal/visits` the DynamoDB logic. |
 | `infra/` | Terraform. One state, remote in S3, covering the site stack and the counter. |
 | `e2e/` | The Playwright test. Development tooling, never uploaded with the site. |
-| `.github/workflows/` | `deploy-site.yml`, path filtered to `client/**`. |
+| `.github/workflows/` | `deploy-site.yml` for `client/**`, `infra.yml` for the stack, `e2e.yml` called by both. |
 | `Makefile` | Builds the Lambda binary, which Terraform packages but cannot compile. |
 
 ## Design decisions
@@ -155,10 +161,13 @@ custom domain on the API.
 
 ## Deploying
 
-Pushing to `main` with changes under `client/**` deploys the site. There is nothing to run locally.
+Pushing to `main` deploys. Changes under `client/**` sync the site and invalidate CloudFront;
+changes anywhere else run the Go tests, apply Terraform, and then run the Playwright test against
+production. Pull requests get the tests and a `terraform plan` published to the run summary, so
+reviewing the diff and reading the plan are the same act.
 
-Infrastructure changes are applied by hand, through the Makefile. Terraform packages the Lambda
-binary but cannot compile it, so anything reading the archive builds it first:
+The Makefile still drives everything locally, and Terraform packages the Lambda binary but cannot
+compile it, so anything reading the archive builds it first:
 
 ```bash
 make test      # go test -race -cover ./...
@@ -194,6 +203,24 @@ rendered page, not the page count.
 
 The filename never changes. LinkedIn and the site's own CTA both point at it.
 
+## Monitoring
+
+Three CloudWatch alarms on the counter, all reporting to one SNS topic and from there to email.
+
+| Alarm | Fires when | Why that threshold |
+|---|---|---|
+| Errors | any error in five minutes | The handler's only failure path is DynamoDB, so one is already news. |
+| p95 latency | over 2s across two windows | A cold start is 1,364 ms and healthy. One window would alarm on it. |
+| Invocation spike | over 500 in five minutes | An order of magnitude under the stage throttle, well above real traffic. |
+
+All three treat missing data as healthy. This is the argument worth understanding: a five minute
+window with no visitors produces no datapoint rather than a zero, and CloudWatch's default for a gap
+is to hold the alarm's previous state. On a site this quiet that default leaves an alarm reporting
+something it decided hours ago.
+
+The email subscription is confirmed out of band. Terraform creates it and reports success, and it
+delivers nothing until the link AWS sends is clicked.
+
 ## Cost
 
 About fifty cents a month at rest, which is the Route 53 hosted zone. S3, CloudFront, and the
@@ -204,6 +231,8 @@ Nothing in the counter bills while idle. On demand DynamoDB, a Lambda that scale
 API charged per request, and a log group with 14 day retention. At list price a single visit costs
 about $3.03 per million requests, of which the Lambda duration is 0.27%. The expensive parts are
 CloudFront and API Gateway moving bytes, and CloudWatch storing log lines.
+
+The alarms are free: CloudWatch bills standard alarms past the first ten, and there are three.
 
 An AWS Budget is set at $5 a month, account wide and unfiltered, alerting at 80% of actual spend and
 100% of forecast. It is deliberately not scoped to this project's services, since a budget's job is
@@ -218,8 +247,8 @@ tripping it once a year.
   against a fake.
 - **Phase 3** — *complete.* Integration. JS fetches and renders the count, Playwright end to end
   test against production.
-- **Phase 4** CI/CD hardening. Plan on PR, apply on merge, e2e gating the deploy, CloudWatch alarms
-  to SNS.
+- **Phase 4** — *complete.* CI/CD hardening. Plan on PR, apply on merge, e2e gating the deploy,
+  CloudWatch alarms to SNS.
 - **Phase 5** Write up published, with the architecture diagram.
 
 ## Related repositories

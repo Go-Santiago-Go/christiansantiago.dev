@@ -1,0 +1,43 @@
+name: e2e
+
+# Called by the two deploy workflows rather than triggered on its own, so the site
+# publish and the infrastructure apply are gated by the same smoke test without
+# either one copying it.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: e2e
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      # ci rather than install: it installs exactly what the lockfile pins and
+      # fails when package.json has drifted from it, which is what makes the run
+      # reproducible.
+      - name: Install the suite
+        run: npm ci
+
+      # Only the browser the config declares. The default pulls all three engines
+      # and most of the minute this job takes.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Holds no credentials by design. The test reaches the site over the public
+      # URL the way a visitor does, which is the whole point of a smoke test: it
+      # exercises CloudFront, the API route, and the Lambda together.
+      - name: Load the live site and assert the counter rendered
+        run: npx playwright test

@@ -1,0 +1,145 @@
+name: infra
+
+on:
+  # Deliberately unfiltered. A plan that reports on every pull request can be made
+  # a required check, where a path filtered one would stay pending forever on the
+  # pull requests it skipped and block the merge.
+  pull_request:
+
+  # Filtered, because an apply on a commit that touched only the site is a slow
+  # no-op sitting in front of the site deploy.
+  push:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - 'counter/**'
+      - '.github/workflows/infra.yml'
+
+# The default for every job below. The two that trade an OIDC token for AWS
+# credentials widen it themselves, so the test job never holds one.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: counter/go.mod
+          cache-dependency-path: counter/go.sum
+
+      # -race is the reason this job exists at all: the counter's whole claim is
+      # that concurrent visitors cannot corrupt it.
+      - name: Test the counter
+        run: make test
+
+  plan:
+    needs: test
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: counter/go.mod
+          cache-dependency-path: counter/go.sum
+
+      # Terraform packages the binary but cannot compile it, and the archive data
+      # source reads the file during plan, so a missing binary fails the plan
+      # rather than the apply.
+      - name: Build the Lambda binary
+        run: make counter
+
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN }}
+          aws-region: us-east-2
+
+      - name: Check formatting
+        run: terraform -chdir=infra fmt -check -recursive
+
+      - name: Initialize
+        run: terraform -chdir=infra init
+
+      # -lock=false is what lets the role stay read only. A plan takes a state lock
+      # by default, which needs write access to the lock object to buy nothing:
+      # nothing a plan does can corrupt state.
+      - name: Plan
+        id: plan
+        run: terraform -chdir=infra plan -lock=false -no-color -input=false
+
+      # Puts the diff on the run's summary page, so reviewing the pull request and
+      # reading the plan are the same act.
+      #
+      # Passed through the environment rather than interpolated into the script:
+      # an expression expands before the shell parses the line, so plan output
+      # holding a backtick would execute, and what gets planned here arrives from
+      # a pull request.
+      - name: Publish the plan to the run summary
+        if: always()
+        env:
+          PLAN: ${{ steps.plan.outputs.stdout }}
+        run: |
+          {
+            echo '### Terraform plan'
+            echo ''
+            echo '```terraform'
+            echo "$PLAN"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  apply:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: counter/go.mod
+          cache-dependency-path: counter/go.sum
+
+      - name: Build the Lambda binary
+        run: make counter
+
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_APPLY_ROLE_ARN }}
+          aws-region: us-east-2
+
+      - name: Initialize
+        run: terraform -chdir=infra init
+
+      # Takes the lock, unlike the plan above. Two applies racing each other is
+      # exactly what state locking exists to prevent.
+      - name: Apply
+        run: terraform -chdir=infra apply -auto-approve -input=false
+
+  # A deploy that fails the smoke test is a failed deploy, so this runs after the
+  # apply rather than alongside it.
+  verify:
+    needs: apply
+    uses: ./.github/workflows/e2e.yml
