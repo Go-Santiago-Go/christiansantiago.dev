@@ -268,12 +268,20 @@ data "aws_iam_policy_document" "apply_iam" {
     }
   }
 
-  # Read only, for the provider data source at the top of this file. PowerUserAccess
-  # excludes all of IAM, so without this the very first refresh fails.
+  # Read only, for the provider data source at the top of this file.
   statement {
     sid       = "ReadSharedOidcProvider"
     actions   = ["iam:GetOpenIDConnectProvider"]
     resources = [data.aws_iam_openid_connect_provider.github.arn]
+  }
+
+  # The data source looks the provider up by URL, and resolving a URL to an ARN
+  # means listing them first. A list has nothing to scope to, so this one is
+  # account wide and returns ARNs rather than any content.
+  statement {
+    sid       = "FindSharedOidcProvider"
+    actions   = ["iam:ListOpenIDConnectProviders"]
+    resources = ["*"]
   }
 }
 
