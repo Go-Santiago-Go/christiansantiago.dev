@@ -209,8 +209,13 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <li class="entry__point">Developed cloud application skills through hands-on AWS labs across serverless and container services, building event-driven workflows with AWS Lambda, Amazon API Gateway, Amazon DynamoDB, Amazon S3, Amazon SNS, and Amazon SQS, orchestrating multi-step processes with AWS Step Functions, and deploying containerized applications with Docker, Amazon ECS, Amazon EKS, and Amazon ECR.</li>
+              <!-- "Trained in" rather than "completed": AWS discontinued the program
+                   before the track finished. The bullets below claim work done, not a
+                   credential held, so they stand without it. -->
+              <li class="entry__point">Trained in cloud application development through AWS Cloud Institute, an official AWS program built and taught by AWS engineers.</li>
+              <li class="entry__point">Built event-driven workflows with AWS Lambda, Amazon API Gateway, Amazon DynamoDB, Amazon S3, Amazon SNS, and Amazon SQS, orchestrating multi-step processes with AWS Step Functions, and deploying containerized applications with Docker, Amazon ECS, Amazon EKS, and Amazon ECR.</li>
               <li class="entry__point">Applied AWS AI/ML services including Amazon Bedrock, Amazon Rekognition, and Amazon Textract, and built Retrieval Augmented Generation (RAG) workflows with LangChain, practicing Infrastructure as Code (IaC) and CI/CD, with least-privilege IAM and observability through Amazon CloudWatch and AWS X-Ray.</li>
+              <li class="entry__point">Provisioned infrastructure as code in CloudFormation, AWS CDK, and Terraform, and built CI/CD pipelines with AWS CodeBuild and CodePipeline across DevOps and DevSecOps workflows.</li>
             </ul>
           </article>
 
@@ -227,8 +232,13 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <li class="entry__point">Built and maintained ETL pipelines for client-supplied data feeds, automating recurring data formatting and ingestion in Python, and integrated CRM, order management, and inventory systems, resolving the cross-platform data inconsistencies that were breaking fulfillment workflows.</li>
-              <li class="entry__point">Performed dimensional data modeling with star and snowflake schemas and surfaced it through SQL and BI dashboards, isolating analytical reporting from the transactional source systems.</li>
+              <!-- First two mirror the resume verbatim. The 8-15% defect rate is an
+                   estimate scoped to these clients' feeds, not an instrumented
+                   figure; keep that wording intact wherever it is reused. -->
+              <li class="entry__point">Built and maintained ETL pipelines standardizing multi-channel client-provided mailing address data to USPS formatting standards and verifying deliverability before print, automating ingestion in Python for batches of up to 250,000 addresses, where client-typical 8&ndash;15% defect rates meant reprints, wasted postage, and delays cascading into other clients' jobs.</li>
+              <li class="entry__point">Modeled reporting data dimensionally with star and snowflake schemas, surfaced through SQL and BI dashboards.</li>
+              <li class="entry__point">Integrated CRM, order management, and inventory systems, resolving the cross-platform data inconsistencies that were breaking fulfillment workflows.</li>
+              <li class="entry__point">Presented operational findings to leadership and worked with non-technical stakeholders to turn reporting into decisions.</li>
             </ul>
           </article>
 
@@ -244,6 +254,7 @@
             <ul class="entry__points stack">
               <li class="entry__point">Engineered automated ETL workflows to ingest, normalize, and validate raw client data from disparate third-party sources, enforcing the strict data hygiene and schema consistency required for trusted downstream workflows.</li>
               <li class="entry__point">Delivered short-cycle contract engagements integrating client systems with industry-specific CRMs and third-party APIs, working against vendor platforms.</li>
+              <li class="entry__point">Built serverless applications on AWS for client workloads, using managed services in place of provisioned servers.</li>
             </ul>
           </article>
 
@@ -260,8 +271,9 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <li class="entry__point">Designed REST APIs and microservice architectures across PostgreSQL and MongoDB in an intensive full-stack program covering system design and DevOps.</li>
-              <li class="entry__point">Built and contributed to open source products serving real developer communities, working in Agile cycles with pair programming and code review throughout.</li>
+              <li class="entry__point">Designed and built RESTful APIs and microservice architectures, applying async programming and data modeling across relational and non-relational databases.</li>
+              <li class="entry__point">Completed an intensive full-stack curriculum in JavaScript, TypeScript, Node.js, React, and Express, covering backend engineering, system design, and DevOps.</li>
+              <li class="entry__point">Worked in Agile cycles with pair programming, code review, and iterative delivery, building and contributing to open source software alongside a team.</li>
             </ul>
           </article>
 
@@ -278,10 +290,12 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <li class="entry__point">Developed incident response and infrastructure monitoring for high-throughput facility operations, establishing precise CloudWatch telemetry thresholds to detect anomalies and reduce mean-time-to-resolution.</li>
-              <li class="entry__point">Decoupled facility systems with SNS and SQS event-driven workflows to route operational alerts, reducing incident response lag across the distribution environment.</li>
-              <li class="entry__point">Transformed post-mortem incident reports into actionable data, designing dimensional OLAP models that isolated analytical queries from transactional traffic to track systemic failure patterns.</li>
-              <li class="entry__point">Contributed to an on-premise to hybrid AWS migration, working hands-on with Lambda, API Gateway, S3, RDS, DynamoDB, SNS, SQS, and CloudWatch.</li>
+              <!-- First three mirror the resume verbatim and in resume order. The
+                   resume is the reference surface; this one syncs to it. -->
+              <li class="entry__point">Contributed to an on-premise to hybrid AWS migration, working hands-on with Lambda, API Gateway, S3, RDS, DynamoDB, SNS/SQS, and CloudWatch across backend infrastructure supporting facility operations.</li>
+              <li class="entry__point">Developed incident response and monitoring for an 80,000-package sort, one of four daily sorts, setting CloudWatch thresholds against a 15&ndash;20 minute downtime target where faults drove missorts and service failures.</li>
+              <li class="entry__point">Transformed post-mortem incident reports into dimensional OLAP models that isolated analytical queries from transactional traffic, surfacing the recurring faults behind extended downtime so they could be addressed before repeating.</li>
+              <li class="entry__point">Decoupled facility systems with SNS and SQS event-driven workflows to route operational alerts across the distribution environment.</li>
               <li class="entry__point">Diagnosed and resolved PLC faults on automated conveyor and sorting systems to protect throughput targets.</li>
             </ul>
           </article>
@@ -299,9 +313,13 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <li class="entry__point">Analyzed campaign performance in Python and Power BI, surfacing trends in conversion rate, ROAS, and audience engagement that drove spend and targeting decisions.</li>
-              <li class="entry__point">Aggregated and cleaned multi-source campaign data with SQL and Excel models, and tracked downstream site behavior and attribution through Google Analytics.</li>
-              <li class="entry__point">Planned and ran direct-to-consumer paid campaigns across multiple e-commerce accounts, owning budget, targeting, and creative iteration.</li>
+              <!-- Consolidation leads so the earliest role plants the multi-source
+                   data vocabulary the later entries repeat. Deliberately not called
+                   an ETL pipeline: this was SQL and spreadsheet models, and the
+                   stronger word would not survive a follow-up question. -->
+              <li class="entry__point">Consolidated campaign data from disparate ad platforms and Google Analytics sources with SQL and Excel models, normalizing inconsistent exports into one dataset that reporting and attribution depended on.</li>
+              <li class="entry__point">Analyzed campaign performance in Python, SQL, and Power BI, surfacing conversion rate, ROAS, and audience engagement trends that drove spend and targeting decisions.</li>
+              <li class="entry__point">Ran direct-to-consumer paid campaigns across multiple e-commerce accounts, owning budget allocation, audience targeting, and creative iteration.</li>
             </ul>
           </article>
 
