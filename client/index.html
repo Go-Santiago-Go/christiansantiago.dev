@@ -462,17 +462,16 @@
                  costs and controls. Same words as the resume bullet, one break
                  added, matching the treatment on the retrain-pipeline card. -->
             <p class="card__desc">
-              LLM inference gateway in Go adding the operational layer on top of Amazon Bedrock:
-              Server-Sent Events (SSE) token streaming, per-key API authentication and rate
-              limiting, and retries with backoff and jitter.
+              LLM inference gateway in Go fronting Amazon Bedrock: Server-Sent Events (SSE) token
+              streaming, per-key authentication and rate limiting, per-request cost metering, and
+              multi-provider failover behind per-provider circuit breakers.
             </p>
             <p class="card__desc">
-              Meters token cost per request and
-              attributes it per API key in structured logs, with per-key token buckets enforcing a
-              hard ~$10.50/day spend ceiling in middleware rather than a post-hoc billing alarm.
-              Cut worst-case Bedrock API calls per request 67% (9 &rarr; 3) by replacing the AWS
-              SDK's nested default retryer with a single explicit transient-only loop. Deployed on
-              Amazon ECS Fargate with Terraform IaC.
+              Per-key token buckets enforce a hard ~$10.50/day spend ceiling in middleware rather
+              than a post-hoc billing alarm. Cut worst-case Bedrock API calls per request 67%
+              (9 to 3) by replacing the AWS SDK's nested default retryer with one explicit
+              transient-only loop. Prometheus and Grafana observability; deployed on Amazon ECS
+              Fargate with Terraform.
             </p>
             <!-- Two deliberate groups: what the service is and does on the
                  first line, what runs and ships it on the second. The break is
@@ -480,7 +479,7 @@
                  place at every viewport width. Rate Limiting and Cost Metering
                  are capabilities rather than technologies, listed here because
                  they are what distinguishes this from a Bedrock passthrough. -->
-            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Server-Sent Events &middot; Rate Limiting &middot; Cost Metering<br>ECS Express Mode on Fargate &middot; Terraform &middot; Docker &middot; GitHub OIDC &middot; CloudWatch &middot; CloudFront &middot; TypeScript &middot; React</p>
+            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Server-Sent Events &middot; Rate Limiting &middot; Cost Metering &middot; Circuit Breakers &middot; Multi-Provider Failover<br>ECS Express Mode on Fargate &middot; Terraform &middot; Docker &middot; GitHub OIDC &middot; Prometheus &middot; Grafana &middot; CloudWatch &middot; CloudFront &middot; TypeScript &middot; React</p>
             <p class="card__links cluster">
               <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/inference-gateway" target="_blank" rel="noopener">GitHub</a>
             </p>
@@ -489,32 +488,57 @@
           <article class="card rule stack reveal">
             <h3 class="card__title">rag-api</h3>
             <p class="card__eyebrow">Retrieval</p>
-            <p class="card__metric">Retrieval systems return passages but not accountability: no link from a claim back to the text that supports it, no way to separate a retrieval miss from a generation error, and a confidently wrong answer reads exactly like a right one.</p>
-            <!-- Two paragraphs on the same seam the other cards use: what the
-                 service is and returns, then what it cost to find out and how it
-                 is locked down. -->
-            <!-- Trimmed from a 1175-character version to sit level with the
-                 other cards. What came out, in case it should go back: "1024
-                 dimensions", the two-stack Terraform teardown story and its
-                 $0.58 against $80 comparison, and the security group with no
-                 inbound rule that leaves tasks unreachable except through the
-                 load balancer. That last one is the strongest of the three and
-                 the first thing to restore if this card gets room again. -->
+            <!-- Names the failure mode of the genre rather than of retrieval
+                 systems generally, which is what the previous version did. The
+                 card's whole argument is measurement, so the problem statement
+                 now sets that up instead of arriving at it in paragraph three. -->
+            <p class="card__metric">A RAG service that has never been measured is a demo. Nobody can separate a retrieval miss from a generation error, and a confidently wrong answer reads exactly like a right one.</p>
+            <!-- Two paragraphs, matching the other three cards: what the two
+                 endpoints do, then what the measurements said. The second is the
+                 card's reason to exist. Every other project states what was
+                 built; this one states what was tested, including a change that
+                 lost, which is the harder claim to make.
+
+                 This card ran 40% longer than the next longest, which in a
+                 two-column grid left a visible hole under its row partner,
+                 because .card__links pins the button row to the bottom. Length
+                 parity across cards is therefore a layout constraint here, not a
+                 style preference. Check the other three before growing this one. -->
+            <!-- Cut to sit level with the other cards, most recent first. Out
+                 now: the Terraform two-lifetime split and its $80/month
+                 comparison, and the Secrets Manager injection, both dropped
+                 because retrain-pipeline already carries the cost-discipline
+                 story and this card cannot afford a third paragraph. Also out,
+                 "800-rune chunks beat 500 by 11 points", since the 71-against-43
+                 comparison already establishes that chunking was measured.
+
+                 Out from earlier passes: "1024 dimensions", and the security
+                 group with no inbound rule that leaves tasks unreachable except
+                 through the load balancer.
+
+                 The biggest single loss remains the latency profile (p50 1.8s /
+                 p95 3.0s, 88% in Bedrock generation against 0.77ms for the
+                 vector search) and the decision it drove, which was to rule out
+                 indexing the vector store and treat token streaming as the only
+                 change that would move perceived latency. It is measured and it
+                 is the only place a measurement talked us out of an
+                 optimisation, so restore it first if this card gains room. -->
             <p class="card__desc">
-              RAG service in Go on Amazon ECS Fargate at $0.58/month all in, Bedrock inference
-              included: 500-rune overlapping chunks that never split a multi-byte character, Titan
-              v2 embeddings, and top-5 cosine search in pgvector, returning { answer, sources[] } so
-              a wrong answer traces to whether retrieval or generation failed.
+              Go service on Amazon ECS Fargate, two endpoints. /ingest splits a document on its
+              heading structure at 800 runes and embeds each chunk with Titan v2 into pgvector.
+              /query pulls 20 candidates by cosine distance, reranks them to 5 with Cohere Rerank,
+              and returns { answer, sources[] } so a wrong answer traces to whether retrieval or
+              generation failed.
             </p>
             <p class="card__desc">
-              Profiled at p50 1.8s / p95 3.0s, with 88% of that in Bedrock generation against
-              0.77ms for the vector search, which ruled out indexing the vector store and pointed at
-              token streaming as the only change that would move perceived latency. RDS owns the
-              database password
-              and ECS injects it from Secrets Manager at launch, so it never enters the image or
-              Terraform state.
+              Retrieval changes are measured against 35 hand-labeled questions, not argued.
+              Reranking put the answering passage first 71% of the time against 43% for vector
+              search alone. Hybrid search looked obvious and lost, so it is not in the service. A
+              separate model grades faithfulness, validated against deliberately corrupted answers
+              first to prove it can fail one: 70 gradings, zero unfaithful, including 8 where
+              retrieval returned nothing and the model declined instead of inventing.
             </p>
-            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Titan v2 Embeddings &middot; pgvector &middot; Vector Search &middot; Source Citations &middot; RDS PostgreSQL &middot; ECS Express Mode on Fargate &middot; Multi-Tier VPC &middot; Terraform &middot; Docker &middot; Distroless &middot; GitHub OIDC &middot; Secrets Manager &middot; CloudWatch</p>
+            <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Titan v2 Embeddings &middot; Cohere Rerank &middot; pgvector &middot; Source Citations &middot; Evaluation Harness &middot; LLM-as-Judge &middot; RDS PostgreSQL &middot; ECS Express Mode on Fargate &middot; Multi-Tier VPC &middot; Terraform &middot; Docker &middot; Distroless &middot; GitHub OIDC &middot; Secrets Manager &middot; CloudWatch</p>
             <p class="card__links cluster">
               <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/rag-api" target="_blank" rel="noopener">GitHub</a>
             </p>
