@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Christian Santiago — Cloud &amp; Software Engineer | AWS, Go, Python, Terraform</title>
-  <meta name="description" content="Cloud and software engineer focused on AWS infrastructure, data pipelines, cost efficiency, and service reliability. Go, Python, and Terraform. Portfolio, experience, and resume.">
+  <title>Christian Santiago — Software Engineer | Generative AI Infrastructure on AWS</title>
+  <meta name="description" content="Software engineer building generative AI infrastructure on AWS in Go, Python, and Terraform: retrieval systems, inference gateways, evaluation-gated pipelines, and guardrails. Portfolio, experience, and resume.">
   <link rel="canonical" href="https://christiansantiago.dev/">
 
   <!-- Open Graph drives the link preview when the site is shared on LinkedIn,
        which is the primary way recruiters will encounter it. -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://christiansantiago.dev/">
-  <meta property="og:title" content="Christian Santiago — Cloud &amp; Software Engineer | AWS, Go, Python, Terraform">
-  <meta property="og:description" content="Cloud and software engineer focused on AWS infrastructure, data pipelines, cost efficiency, and service reliability. Infrastructure as code, system design, and CI/CD.">
+  <meta property="og:title" content="Christian Santiago — Software Engineer | Generative AI Infrastructure on AWS">
+  <meta property="og:description" content="Retrieval systems, inference gateways, evaluation-gated pipelines, and guardrails. Go, Python, and Terraform on AWS.">
   <meta property="og:image" content="https://christiansantiago.dev/og-card.png">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -70,13 +70,10 @@
       <div class="center">
         <div class="hero__body stack reveal">
           <h1>Christian Santiago</h1>
-          <!-- Deliberately the AWS credential alone. The other certifications
-               live in the Education section; promoting all of them here costs
-               the hero more weight than the extra signal is worth. -->
           <p class="hero__badge">AWS Certified Developer</p>
           <p class="hero__title">
-            Cloud and software engineer focused on AWS infrastructure, data pipelines, cost
-            efficiency, and service reliability.
+            Software engineer building generative AI infrastructure on AWS: retrieval, inference
+            serving, evaluation, and guardrails.
           </p>
           <p class="hero__blurb prose">
             I came up through infrastructure monitoring, incident response, and the data engineering
@@ -123,20 +120,20 @@
                 BI reporting for leadership, and freelance application development.
               </p>
               <p>
-                The through line in my work is system design. Good architecture has less to do with
-                knowing services than with asking what tradeoffs you are making with a decision, and
-                being able to answer. Reliability against cost. Simplicity against flexibility.
-                Shipping now against unwinding it later. There is rarely a correct answer, only one
-                that fits the requirement in front of you, so I reach for the smallest thing that
-                meets it rather than the largest thing that impresses. I treat those decisions as
-                revisable rather than permanent, and let telemetry rather than my own opinion tell
-                me when one needs revisiting. The habit came from presenting technical decisions to
-                leadership and non-technical stakeholders, who were never going to accept "because
-                it is best practice" as an answer.
+                The through line in my work is system design, which has less to do with knowing
+                services than with asking what tradeoffs a decision makes. Reliability against cost.
+                Simplicity against flexibility. Shipping now against unwinding it later. I reach for
+                the smallest thing that meets the requirement, not the largest that impresses, and
+                let telemetry tell me when to revisit one. The habit came from presenting technical
+                decisions to leadership and non-technical stakeholders, who were never going to
+                accept "because it is best practice" as an answer.
               </p>
               <p>
-                Lately I have been pointing that at generative AI and machine learning workloads,
-                in Go, Python, and Terraform on AWS. MLOps is the direction I am headed. I am an AWS
+                Lately I have been pointing that at the infrastructure generative AI needs to run in
+                production, in Go, Python, and Terraform on AWS: a retrieval service measured
+                against a labeled evaluation set, a gateway that meters the cost of inference behind
+                a hard spend ceiling, and a training pipeline where bad data cannot merge and no
+                model reaches production without a human reading the evaluation. I am an AWS
                 Certified Developer, studied computer science at Vanderbilt University and cloud
                 engineering through the AWS Cloud Institute.
               </p>
@@ -192,8 +189,6 @@
 
         <!-- Reverse chronological by start date, which is the order a recruiter
              scans for and the order the reference site uses. -->
-        <!-- VERIFY: locations below are inferred from the Nashville metro area on the
-             LinkedIn profile. Confirm each one before this ships. -->
         <div class="entries stack">
 
           <article class="entry rule stack reveal">
@@ -209,12 +204,10 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <!-- "Trained in" rather than "completed": AWS discontinued the program
-                   before the track finished. The bullets below claim work done, not a
-                   credential held, so they stand without it. -->
               <li class="entry__point">Trained in cloud application development through AWS Cloud Institute, an official AWS program built and taught by AWS engineers.</li>
               <li class="entry__point">Built event-driven workflows with AWS Lambda, Amazon API Gateway, Amazon DynamoDB, Amazon S3, Amazon SNS, and Amazon SQS, orchestrating multi-step processes with AWS Step Functions, and deploying containerized applications with Docker, Amazon ECS, Amazon EKS, and Amazon ECR.</li>
-              <li class="entry__point">Applied AWS AI/ML services including Amazon Bedrock, Amazon Rekognition, and Amazon Textract, and built Retrieval Augmented Generation (RAG) workflows with LangChain, practicing Infrastructure as Code (IaC) and CI/CD, with least-privilege IAM and observability through Amazon CloudWatch and AWS X-Ray.</li>
+              <li class="entry__point">Built LLM applications on Amazon Bedrock with LangChain, chaining model calls and managing conversation memory, and grounded them in domain data through Retrieval Augmented Generation (RAG) over Amazon Bedrock Knowledge Bases, applying prompt engineering and configuring Amazon Bedrock Guardrails for responsible AI.</li>
+              <li class="entry__point">Applied Amazon Rekognition and Amazon Textract for image analysis and document extraction, practicing Infrastructure as Code (IaC) and CI/CD, with least-privilege IAM and observability through Amazon CloudWatch and AWS X-Ray.</li>
               <li class="entry__point">Provisioned infrastructure as code in CloudFormation, AWS CDK, and Terraform, and built CI/CD pipelines with AWS CodeBuild and CodePipeline across DevOps and DevSecOps workflows.</li>
             </ul>
           </article>
@@ -232,9 +225,6 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <!-- First two mirror the resume verbatim. The 8-15% defect rate is an
-                   estimate scoped to these clients' feeds, not an instrumented
-                   figure; keep that wording intact wherever it is reused. -->
               <li class="entry__point">Built and maintained ETL pipelines standardizing multi-channel client-provided mailing address data to USPS formatting standards and verifying deliverability before print, automating ingestion in Python for batches of up to 250,000 addresses, where client-typical 8&ndash;15% defect rates meant reprints, wasted postage, and delays cascading into other clients' jobs.</li>
               <li class="entry__point">Modeled reporting data dimensionally with star and snowflake schemas, surfaced through SQL and BI dashboards.</li>
               <li class="entry__point">Integrated CRM, order management, and inventory systems, resolving the cross-platform data inconsistencies that were breaking fulfillment workflows.</li>
@@ -290,8 +280,6 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <!-- First three mirror the resume verbatim and in resume order. The
-                   resume is the reference surface; this one syncs to it. -->
               <li class="entry__point">Contributed to an on-premise to hybrid AWS migration, working hands-on with Lambda, API Gateway, S3, RDS, DynamoDB, SNS/SQS, and CloudWatch across backend infrastructure supporting facility operations.</li>
               <li class="entry__point">Developed incident response and monitoring for an 80,000-package sort, one of four daily sorts, setting CloudWatch thresholds against a 15&ndash;20 minute downtime target where faults drove missorts and service failures.</li>
               <li class="entry__point">Transformed post-mortem incident reports into dimensional OLAP models that isolated analytical queries from transactional traffic, surfacing the recurring faults behind extended downtime so they could be addressed before repeating.</li>
@@ -313,10 +301,6 @@
               </p>
             </div>
             <ul class="entry__points stack">
-              <!-- Consolidation leads so the earliest role plants the multi-source
-                   data vocabulary the later entries repeat. Deliberately not called
-                   an ETL pipeline: this was SQL and spreadsheet models, and the
-                   stronger word would not survive a follow-up question. -->
               <li class="entry__point">Consolidated campaign data from disparate ad platforms and Google Analytics sources with SQL and Excel models, normalizing inconsistent exports into one dataset that reporting and attribution depended on.</li>
               <li class="entry__point">Analyzed campaign performance in Python, SQL, and Power BI, surfacing conversion rate, ROAS, and audience engagement trends that drove spend and targeting decisions.</li>
               <li class="entry__point">Ran direct-to-consumer paid campaigns across multiple e-commerce accounts, owning budget allocation, audience targeting, and creative iteration.</li>
@@ -411,19 +395,7 @@
           <article class="card rule stack reveal">
             <h3 class="card__title">retrain-pipeline</h3>
             <p class="card__eyebrow">Training and governance</p>
-            <!-- States the problem rather than the build status, matching the
-                 inference-gateway card. The two remaining cards still open on
-                 "Deployed and verified"; carry this treatment across when their
-                 copy is rewritten. -->
             <p class="card__metric">Retraining pipelines automate the training but not the judgment: no contract on incoming labels, no lineage from a model back to the rows that made it, and one bad batch can promote itself to production.</p>
-            <!-- Copy tracks resume/resume.tex, which carries four length
-                 variants of this bullet. This is the two-sentence one, chosen to
-                 sit level with inference-gateway, its partner in the two-column
-                 grid row. Edit the resume first and mirror here; if the row
-                 partner's length changes, reconsider which variant belongs. -->
-            <!-- Split on the boundary the copy already had: the data path, then
-                 the promotion path. Same words as the resume variant, one break
-                 added, so parity with resume/resume.tex still holds. -->
             <p class="card__desc">
               CI-driven MLOps retraining pipeline on Amazon SageMaker at $0/month idle compute cost and
               $0.0026 per training run: Great Expectations gates new labeled data as a required
@@ -438,11 +410,6 @@
               21 named IAM actions with zero wildcards that omits UpdateModelPackage, so no model is
               promoted without a human and CI could not approve one if it tried.
             </p>
-            <!-- Capabilities sit alongside technologies here, as on the
-                 inference-gateway card: Data Quality Gates, Dataset Lineage and
-                 Human-in-the-Loop Approval are what was built rather than what
-                 was installed, and they carry the governance signal that the
-                 service names alone do not. -->
             <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Python &middot; Amazon SageMaker &middot; Model Registry &middot; Great Expectations &middot; Data Quality Gates &middot; DVC &middot; Dataset Lineage &middot; Human-in-the-Loop Approval &middot; Idempotent Job Submission &middot; Least-Privilege IAM &middot; scikit-learn &middot; S3 &middot; Terraform &middot; GitHub Actions OIDC &middot; CloudWatch</p>
             <p class="card__links cluster">
               <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/retrain-pipeline" target="_blank" rel="noopener">GitHub</a>
@@ -452,18 +419,7 @@
           <article class="card rule stack reveal">
             <h3 class="card__title">inference-gateway</h3>
             <p class="card__eyebrow">Serving</p>
-            <!-- States the problem rather than the build status. The three
-                 other cards still open on "Deployed and verified", which is the
-                 repetition this replaces; carry the same treatment across when
-                 their copy is rewritten. -->
             <p class="card__metric">Model endpoints bill by the token but tell you nothing: no per-caller attribution, no spend ceiling, and one runaway client can drain a month's budget overnight.</p>
-            <!-- Copy tracks resume/resume.tex verbatim. The resume is the source
-                 of truth for this card, so edit it there first and mirror here
-                 rather than rewording one to fit the other's voice.
-
-                 Split after the first sentence: what the service is, then what it
-                 costs and controls. Same words as the resume bullet, one break
-                 added, matching the treatment on the retrain-pipeline card. -->
             <p class="card__desc">
               LLM inference gateway in Go fronting Amazon Bedrock: Server-Sent Events (SSE) token
               streaming, per-key authentication and rate limiting, per-request cost metering, and
@@ -476,12 +432,6 @@
               transient-only loop. Prometheus and Grafana observability; deployed on Amazon ECS
               Fargate with Terraform.
             </p>
-            <!-- Two deliberate groups: what the service is and does on the
-                 first line, what runs and ships it on the second. The break is
-                 hard rather than left to wrapping so the split lands in the same
-                 place at every viewport width. Rate Limiting and Cost Metering
-                 are capabilities rather than technologies, listed here because
-                 they are what distinguishes this from a Bedrock passthrough. -->
             <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Server-Sent Events &middot; Rate Limiting &middot; Cost Metering &middot; Circuit Breakers &middot; Multi-Provider Failover<br>ECS Express Mode on Fargate &middot; Terraform &middot; Docker &middot; GitHub OIDC &middot; Prometheus &middot; Grafana &middot; CloudWatch &middot; CloudFront &middot; TypeScript &middot; React</p>
             <p class="card__links cluster">
               <a class="btn btn--small" href="https://github.com/Go-Santiago-Go/inference-gateway" target="_blank" rel="noopener">GitHub</a>
@@ -491,41 +441,7 @@
           <article class="card rule stack reveal">
             <h3 class="card__title">rag-api</h3>
             <p class="card__eyebrow">Retrieval</p>
-            <!-- Names the failure mode of the genre rather than of retrieval
-                 systems generally, which is what the previous version did. The
-                 card's whole argument is measurement, so the problem statement
-                 now sets that up instead of arriving at it in paragraph three. -->
             <p class="card__metric">A RAG service that has never been measured is a demo. Nobody can separate a retrieval miss from a generation error, and a confidently wrong answer reads exactly like a right one.</p>
-            <!-- Two paragraphs, matching the other three cards: what the two
-                 endpoints do, then what the measurements said. The second is the
-                 card's reason to exist. Every other project states what was
-                 built; this one states what was tested, including a change that
-                 lost, which is the harder claim to make.
-
-                 This card ran 40% longer than the next longest, which in a
-                 two-column grid left a visible hole under its row partner,
-                 because .card__links pins the button row to the bottom. Length
-                 parity across cards is therefore a layout constraint here, not a
-                 style preference. Check the other three before growing this one. -->
-            <!-- Cut to sit level with the other cards, most recent first. Out
-                 now: the Terraform two-lifetime split and its $80/month
-                 comparison, and the Secrets Manager injection, both dropped
-                 because retrain-pipeline already carries the cost-discipline
-                 story and this card cannot afford a third paragraph. Also out,
-                 "800-rune chunks beat 500 by 11 points", since the 71-against-43
-                 comparison already establishes that chunking was measured.
-
-                 Out from earlier passes: "1024 dimensions", and the security
-                 group with no inbound rule that leaves tasks unreachable except
-                 through the load balancer.
-
-                 The biggest single loss remains the latency profile (p50 1.8s /
-                 p95 3.0s, 88% in Bedrock generation against 0.77ms for the
-                 vector search) and the decision it drove, which was to rule out
-                 indexing the vector store and treat token streaming as the only
-                 change that would move perceived latency. It is measured and it
-                 is the only place a measurement talked us out of an
-                 optimisation, so restore it first if this card gains room. -->
             <p class="card__desc">
               Go service on Amazon ECS Fargate, two endpoints. /ingest splits a document on its
               heading structure at 800 runes and embeds each chunk with Titan v2 into pgvector.
@@ -550,22 +466,7 @@
           <article class="card rule stack reveal">
             <h3 class="card__title">christiansantiago.dev</h3>
             <p class="card__eyebrow">Edge and delivery</p>
-            <!-- The one card that deliberately breaks the shape the other three
-                 share. They each name a problem and end on its consequence; this
-                 one names the problem and ends on the answer. Four cards built
-                 the same way stop reading as observations and start reading as a
-                 template, which is what the old "Deployed and verified" openers
-                 did. Keep this one different.
-
-                 Extend with the counter once Phase 3 lands, and with the measured
-                 Lambda cold start after Phase 2. -->
             <p class="card__metric">Static hosting hides its own risks: a bucket left public, a deploy nobody can reproduce, and long-lived keys sitting in CI forever. This one has none of the three.</p>
-            <!-- The only card with no measured figures, because the project is
-                 not built yet. It grows on architecture rather than numbers, and
-                 every claim here is a design decision that either holds or does
-                 not once Terraform applies. Add the counter throughput and the
-                 measured Lambda cold start after Phases 2 and 3 rather than
-                 estimating either now. -->
             <p class="card__desc">
               A Cloud Resume Challenge build. Static page in a private S3 bucket reachable only
               through CloudFront by Origin Access Control, so the bucket has no public URL at any
@@ -608,17 +509,25 @@
               close enough to the infrastructure to build it, close enough to the data to know what
               it is for.
             </p>
-            <!-- Section order mirrors the About narrative: infrastructure first, data second,
-                 the generative AI and ML work last, because that is the direction rather than
-                 the foundation. -->
             <div class="highlights stack">
+
+              <div class="highlight stack">
+                <h4 class="highlight__title">Generative AI infrastructure</h4>
+                <p class="highlight__body">
+                  Three services deployed and verified on AWS covering retrieval, inference serving,
+                  and training governance: retrieval tuned against a labeled evaluation set rather
+                  than argued about, per-request token and cost accounting behind a hard spend
+                  ceiling on a streaming gateway, data quality gates that run at the pull request,
+                  and model promotion that a human has to sign.
+                </p>
+              </div>
 
               <div class="highlight stack">
                 <h4 class="highlight__title">Cloud and platform engineering</h4>
                 <p class="highlight__body">
-                  Experience building AWS-hosted services in Go and Python, REST APIs, Terraform
-                  defined infrastructure, and event-driven workflows on SNS and SQS, deployed
-                  through CI that authenticates by OIDC rather than stored keys.
+                  Experience building AWS-hosted services in Go, Python, and TypeScript, REST APIs,
+                  Terraform defined infrastructure, and event-driven workflows on SNS and SQS,
+                  deployed through CI that authenticates by OIDC rather than stored keys.
                 </p>
               </div>
 
@@ -638,15 +547,6 @@
                   dimensional models that separate analytical reads from the transactional systems
                   they compete with, and SQL-backed reporting dashboards presented directly to
                   leadership.
-                </p>
-              </div>
-
-              <div class="highlight stack">
-                <h4 class="highlight__title">Services for generative AI and ML workloads</h4>
-                <p class="highlight__body">
-                  Three services deployed and verified on AWS covering training governance,
-                  retrieval, and inference serving, with data quality gates, private data tiers, and
-                  per-request token and cost accounting on a streaming gateway.
                 </p>
               </div>
 
@@ -679,9 +579,9 @@
 
         <div class="contact rule stack reveal">
           <p class="contact__note prose">
-            Always open to connecting, especially about cloud and software engineering work on AWS,
-            or roles where generative AI and machine learning workloads need someone to build the
-            infrastructure underneath them.
+            Always open to connecting, especially about generative AI infrastructure on AWS:
+            retrieval, inference serving, and the evaluation and guardrail work that decides whether
+            either is safe to put in front of users.
           </p>
           <div class="contact__actions cluster">
             <a class="btn btn--primary" href="mailto:santiagothedeveloper@gmail.com">Email Christian</a>
