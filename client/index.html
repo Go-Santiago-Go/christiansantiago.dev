@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Christian Santiago — Software Engineer | Generative AI Infrastructure on AWS</title>
-  <meta name="description" content="Software engineer building generative AI infrastructure on AWS in Go, Python, and Terraform: retrieval systems, inference gateways, evaluation-gated pipelines, and guardrails. Portfolio, experience, and resume.">
+  <meta name="description" content="Software engineer building generative AI infrastructure on AWS: agents, RAG, document extraction, inference serving, and evaluation. Go, Python, TypeScript, and Terraform. Portfolio, experience, and resume.">
   <link rel="canonical" href="https://christiansantiago.dev/">
 
   <!-- Open Graph drives the link preview when the site is shared on LinkedIn,
@@ -13,7 +13,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://christiansantiago.dev/">
   <meta property="og:title" content="Christian Santiago — Software Engineer | Generative AI Infrastructure on AWS">
-  <meta property="og:description" content="Retrieval systems, inference gateways, evaluation-gated pipelines, and guardrails. Go, Python, and Terraform on AWS.">
+  <meta property="og:description" content="Agents, RAG, document extraction, inference serving, evaluation, and guardrails. Go, Python, TypeScript, and Terraform on AWS.">
   <meta property="og:image" content="https://christiansantiago.dev/og-card.png">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -72,14 +72,15 @@
           <h1>Christian Santiago</h1>
           <p class="hero__badge">AWS Certified Developer</p>
           <p class="hero__title">
-            Software engineer building generative AI infrastructure on AWS: retrieval, inference
+            Software engineer building generative AI infrastructure on AWS: agents, RAG, inference
             serving, evaluation, and guardrails.
           </p>
           <p class="hero__blurb prose">
             I came up through infrastructure monitoring, incident response, and the data engineering
             around it, working directly with the clients and stakeholders who depended on the
-            output. Lately I have been building AWS infrastructure in Go, Python, and Terraform for
-            generative AI and machine learning workloads.
+            output. Lately I have been building AWS infrastructure in Go, Python, TypeScript, and
+            Terraform for generative AI workloads, and I am focused on agentic RAG and document
+            extraction.
           </p>
           <div class="hero__actions cluster">
             <a class="btn btn--primary" href="/resume.pdf" target="_blank" rel="noopener">View Resume</a>
@@ -130,10 +131,12 @@
               </p>
               <p>
                 Lately I have been pointing that at the infrastructure generative AI needs to run in
-                production, in Go, Python, and Terraform on AWS: a retrieval service measured
-                against a labeled evaluation set, a gateway that meters the cost of inference behind
-                a hard spend ceiling, and a training pipeline where bad data cannot merge and no
-                model reaches production without a human reading the evaluation. I am an AWS
+                production, in Go, Python, TypeScript, and Terraform on AWS: a retrieval augmented
+                generation (RAG) service measured against a labeled evaluation set, a gateway that
+                prices every inference call and fails over between providers, and a training
+                pipeline where bad data cannot merge and no model reaches production without a
+                human reading the evaluation. I am moving toward agentic RAG and document
+                extraction. I am an AWS
                 Certified Developer, studied computer science at Vanderbilt University and cloud
                 engineering through the AWS Cloud Institute.
               </p>
@@ -194,6 +197,22 @@
           <article class="entry rule stack reveal">
             <div class="entry__head">
               <div>
+                <h3 class="entry__title">AI Document Insights &amp; Data Extraction Extern</h3>
+                <p class="entry__org">Pfizer</p>
+                <p class="entry__location">Remote</p>
+              </div>
+              <p class="entry__dates"><time datetime="2026-08">Aug 2026</time> &ndash; Present</p>
+            </div>
+            <ul class="entry__points stack">
+              <li class="entry__point">Building an AI document extraction prototype replacing manual review of non-GMP clinical supply documents: scanned files parsed in Python with PyMuPDF, OpenCV, and OCR (Tesseract, PaddleOCR) to extract key fields and classify documents.</li>
+              <li class="entry__point">Implementing retrieval over the extracted corpus with Retrieval Augmented Generation (RAG) pipelines, metadata filtering, LangGraph, LlamaIndex, and a vector database.</li>
+              <li class="entry__point">Deploying a searchable interface for querying the extracted document corpus.</li>
+            </ul>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
                 <h3 class="entry__title">Cloud Engineering Resident</h3>
                 <p class="entry__org">AWS Cloud Institute</p>
                 <p class="entry__location">Remote</p>
@@ -239,12 +258,15 @@
                 <p class="entry__org">Independent</p>
                 <p class="entry__location">Nashville, TN</p>
               </div>
-              <p class="entry__dates"><time datetime="2022-08">Aug 2022</time> &ndash; Present</p>
+              <p class="entry__dates">
+                <time datetime="2022-08">Aug 2022</time> &ndash;
+                <time datetime="2026-08">Aug 2026</time>
+              </p>
             </div>
             <ul class="entry__points stack">
               <li class="entry__point">Engineered automated ETL workflows to ingest, normalize, and validate raw client data from disparate third-party sources, enforcing the strict data hygiene and schema consistency required for trusted downstream workflows.</li>
               <li class="entry__point">Delivered short-cycle contract engagements integrating client systems with industry-specific CRMs and third-party APIs, working against vendor platforms.</li>
-              <li class="entry__point">Built serverless applications on AWS for client workloads, using managed services in place of provisioned servers.</li>
+              <li class="entry__point">Built serverless applications on AWS for client workloads in React and Node.js.</li>
             </ul>
           </article>
 
@@ -325,19 +347,6 @@
           <article class="entry rule stack reveal">
             <div class="entry__head">
               <div>
-                <h3 class="entry__title">Vanderbilt University</h3>
-                <p class="entry__org">Computer Science</p>
-              </div>
-              <p class="entry__dates">
-                <time datetime="2014-08">Aug 2014</time> &ndash;
-                <time datetime="2017-05">May 2017</time>
-              </p>
-            </div>
-          </article>
-
-          <article class="entry rule stack reveal">
-            <div class="entry__head">
-              <div>
                 <h3 class="entry__title">AWS Cloud Institute</h3>
                 <p class="entry__org">Cloud Engineering</p>
               </div>
@@ -357,6 +366,19 @@
               <p class="entry__dates">
                 <time datetime="2021-05">May 2021</time> &ndash;
                 <time datetime="2022-04">Apr 2022</time>
+              </p>
+            </div>
+          </article>
+
+          <article class="entry rule stack reveal">
+            <div class="entry__head">
+              <div>
+                <h3 class="entry__title">Vanderbilt University</h3>
+                <p class="entry__org">Computer Science</p>
+              </div>
+              <p class="entry__dates">
+                <time datetime="2014-08">Aug 2014</time> &ndash;
+                <time datetime="2017-05">May 2017</time>
               </p>
             </div>
           </article>
@@ -397,18 +419,17 @@
             <p class="card__eyebrow">Training and governance</p>
             <p class="card__metric">Retraining pipelines automate the training but not the judgment: no contract on incoming labels, no lineage from a model back to the rows that made it, and one bad batch can promote itself to production.</p>
             <p class="card__desc">
-              CI-driven MLOps retraining pipeline on Amazon SageMaker at $0/month idle compute cost and
-              $0.0026 per training run: Great Expectations gates new labeled data as a required
-              check on every pull request, short-circuiting on git diff so code-only PRs return in
-              5s against 56s for data PRs, and DVC versions each dataset in an S3 remote with git
-              holding only the content-hash pointer, which carries into the training job name for
-              idempotent submission.
+              CI-driven MLOps retraining pipeline on Amazon SageMaker with no endpoint, NAT gateway,
+              or GPU, so idle cost is cents of S3 storage: Great Expectations gates new labeled data
+              as a required check on every pull request, and DVC versions each dataset in an S3
+              remote with git holding only the content-hash pointer, which carries into the training
+              job name so a resubmission of the same data is rejected as a duplicate.
             </p>
             <p class="card__desc">
-              A custom Go CLI-tool available to the CI runner submits the job and
-              registers the result as PendingManualApproval in 3m41s from merge, under a CI role of
-              21 named IAM actions with zero wildcards that omits UpdateModelPackage, so no model is
-              promoted without a human and CI could not approve one if it tried.
+              A custom Go CLI available to the CI runner submits the job and registers the result
+              as PendingManualApproval, under four minutes from merge, using IAM roles scoped by ARN
+              with no wildcard actions that omit UpdateModelPackage, so no model is promoted without
+              a human and CI could not approve one if it tried.
             </p>
             <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Python &middot; Amazon SageMaker &middot; Model Registry &middot; Great Expectations &middot; Data Quality Gates &middot; DVC &middot; Dataset Lineage &middot; Human-in-the-Loop Approval &middot; Idempotent Job Submission &middot; Least-Privilege IAM &middot; scikit-learn &middot; S3 &middot; Terraform &middot; GitHub Actions OIDC &middot; CloudWatch</p>
             <p class="card__links cluster">
@@ -419,17 +440,17 @@
           <article class="card rule stack reveal">
             <h3 class="card__title">inference-gateway</h3>
             <p class="card__eyebrow">Serving</p>
-            <p class="card__metric">Model endpoints bill by the token but tell you nothing: no per-caller attribution, no spend ceiling, and one runaway client can drain a month's budget overnight.</p>
+            <p class="card__metric">A raw model endpoint has no per-caller identity, no throttling, no failover, and no answer to "what is p95 right now," so every team calling it rebuilds the same retry loop and nobody can attribute the bill.</p>
             <p class="card__desc">
               LLM inference gateway in Go fronting Amazon Bedrock: Server-Sent Events (SSE) token
               streaming, per-key authentication and rate limiting, per-request cost metering, and
               multi-provider failover behind per-provider circuit breakers.
             </p>
             <p class="card__desc">
-              Per-key token buckets enforce a hard ~$10.50/day spend ceiling in middleware rather
-              than a post-hoc billing alarm. Cut worst-case Bedrock API calls per request 67%
-              (9 to 3) by replacing the AWS SDK's nested default retryer with one explicit
-              transient-only loop. Prometheus and Grafana observability; deployed on Amazon ECS
+              Per-key token buckets decide throttling in middleware, so a rejected request never
+              reaches a paid API, and every response is priced by the model that actually answered.
+              Roughly 23 microseconds of serving overhead per request single-threaded, from an
+              8.6 MB distroless image. Prometheus and Grafana observability; deployed on Amazon ECS
               Fargate with Terraform.
             </p>
             <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Server-Sent Events &middot; Rate Limiting &middot; Cost Metering &middot; Circuit Breakers &middot; Multi-Provider Failover<br>ECS Express Mode on Fargate &middot; Terraform &middot; Docker &middot; GitHub OIDC &middot; Prometheus &middot; Grafana &middot; CloudWatch &middot; CloudFront &middot; TypeScript &middot; React</p>
@@ -450,12 +471,13 @@
               generation failed.
             </p>
             <p class="card__desc">
-              Retrieval changes are measured against 35 hand-labeled questions, not argued.
-              Reranking put the answering passage first 71% of the time against 43% for vector
-              search alone. Hybrid search looked obvious and lost, so it is not in the service. A
-              separate model grades faithfulness, validated against deliberately corrupted answers
-              first to prove it can fail one: 70 gradings, zero unfaithful, including 8 where
-              retrieval returned nothing and the model declined instead of inventing.
+              Retrieval changes are measured against 35 hand-labeled questions, not argued. An
+              offline harness took passage recall@5 from 57.1% to 77.1% across four changes, each
+              measured before it was adopted. Hybrid search looked obvious and lost, so it is not in
+              the service. A separate model grades faithfulness, validated against deliberately
+              corrupted answers first to prove it can fail one: 70 graded responses, zero
+              hallucinated claims, including 8 where retrieval returned nothing and the model
+              declined instead of inventing.
             </p>
             <p class="card__stack"><span class="card__stack-label">Stack:</span> Go &middot; Amazon Bedrock &middot; Titan v2 Embeddings &middot; Cohere Rerank &middot; pgvector &middot; Source Citations &middot; Evaluation Harness &middot; LLM-as-Judge &middot; RDS PostgreSQL &middot; ECS Express Mode on Fargate &middot; Multi-Tier VPC &middot; Terraform &middot; Docker &middot; Distroless &middot; GitHub OIDC &middot; Secrets Manager &middot; CloudWatch</p>
             <p class="card__links cluster">
@@ -516,8 +538,8 @@
                 <p class="highlight__body">
                   Three services deployed and verified on AWS covering retrieval, inference serving,
                   and training governance: retrieval tuned against a labeled evaluation set rather
-                  than argued about, per-request token and cost accounting behind a hard spend
-                  ceiling on a streaming gateway, data quality gates that run at the pull request,
+                  than argued about, per-request token and cost accounting on a streaming
+                  gateway, data quality gates that run at the pull request,
                   and model promotion that a human has to sign.
                 </p>
               </div>
